@@ -1,0 +1,36 @@
+### IDEA ###
+.idea/*
+*.iml
+*/target/*
+*/*.iml
+*~
+backup/
+logs/*.log
+logs/
+schema/*.sh
+upload/
+.DS_Store
+node_modules
+node_modules/
+dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+*.bz2
+*.gz
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+.history
+target/
+*.project
+*.classpath
+*.factorypath
+*.settings/
+

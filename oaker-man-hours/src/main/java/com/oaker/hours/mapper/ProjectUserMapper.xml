@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oaker.hours.mapper.ProjectUserMapper">
+
+    <select id="queryProjectByUserId" resultType="com.oaker.hours.doman.vo.UserProjectShortVO">
+        SELECT pu.project_id AS projectId
+        , p.project_status AS projectStatus
+        , p.project_name AS projectName
+        FROM sys_project_user AS pu
+        LEFT JOIN sys_project AS p ON pu.project_id = p.project_id
+        <where>
+            pu.user_id = #{userId}
+            AND pu.status = 1
+            <if test="projectStatus != null and projectStatus != ''">
+                AND p.project_status = #{projectStatus}
+            </if>
+        </where>
+    </select>
+</mapper>
