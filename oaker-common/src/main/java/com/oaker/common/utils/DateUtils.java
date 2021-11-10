@@ -160,4 +160,21 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
         return Date.from(zonedDateTime.toInstant());
     }
 
+    /**
+     * 得到指定日期的一天的的最后时刻23:59:59
+     *
+     * @param date
+     * @return
+     */
+    public static Date getFinallyDate(Date date) {
+        String temp = DateFormatUtils.format(date, YYYY_MM_DD);
+        temp += " 23:59:59";
+        try {
+            SimpleDateFormat format = new SimpleDateFormat(YYYY_MM_DD_HH_MM_SS);
+            return format.parse(temp);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
 }

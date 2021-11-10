@@ -14,6 +14,7 @@
         <module>oaker-scheduled</module>
         <module>oaker-admin-web</module>
         <module>oaker-man-hours</module>
+        <module>oaker-prototype</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -201,6 +202,12 @@
             <dependency>
                 <groupId>com.oak</groupId>
                 <artifactId>oaker-man-hours</artifactId>
+                <version>${oaker.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.oak</groupId>
+                <artifactId>oaker-prototype</artifactId>
                 <version>${oaker.version}</version>
             </dependency>
 

@@ -87,7 +87,8 @@
       <div class="text item item-two">
         <div class="detailInformation">
           <div class="detailInformation-item">
-            <span>{{ nowMonth }}：&nbsp;</span>&nbsp;<span
+            <!-- <span>{{ nowMonth }}总计：&nbsp;</span>&nbsp;<span -->
+            <span>总计：&nbsp;</span>&nbsp;<span
               >&nbsp;{{ totalPeople }}人&nbsp;</span
             >&nbsp;<span>&nbsp;{{ (totalHours / 8).toFixed(2) }}人天&nbsp;</span
             ><span>{{ totalHours }}工时</span>
@@ -196,6 +197,10 @@ export default {
     },
     changeMonth(row) {
       console.log("切换详情", row);
+      let todate = row.month.replace(/-/g, "/") + "/01";
+      console.log("date", todate);
+      this.$EventCalendar.toDate(todate);
+
       setTimeout(() => {
         let eventwrapper = document.querySelector(".events-wrapper");
         let eventdate = document.querySelector(".date");
@@ -207,32 +212,34 @@ export default {
 
       setTimeout(() => {
         this.showEvents = false;
-        this.showEvemts=true
+        this.showEvemts = true;
       }, 200);
       this.nowMonth = row.month;
       projectHourMonthDetail(this.projectId, this.nowMonth).then(res => {
         console.log("date", res);
         if (res.code == 200) {
           this.monthInfo = res.data;
-          let detailArr = [];
-          this.monthInfo.forEach(el => {
-            let date = el.date.replace(/-/g, "/");
-            if (el.userStatHours != null) {
-              el.userStatHours.forEach(dl => {
-                let title = dl.nickName;
-                let desc = dl.nickName + "投入" + dl.useHour + "工时";
-                let data = {
-                  date,
-                  title,
-                  desc
-                };
-                detailArr.push(data);
-              });
-            }
-          });
+          setTimeout(() => {
+            let detailArr = [];
+            this.monthInfo.forEach(el => {
+              let date = el.date.replace(/-/g, "/");
+              if (el.userStatHours != null) {
+                el.userStatHours.forEach(dl => {
+                  let title = dl.nickName;
+                  let desc = dl.nickName + "投入" + dl.useHour + "工时";
+                  let data = {
+                    date,
+                    title,
+                    desc
+                  };
+                  detailArr.push(data);
+                });
+              }
+            });
 
-          this.demoEvents = detailArr;
-          console.log("detailArr", detailArr);
+            this.demoEvents = detailArr;
+            console.log("detailArr", detailArr);
+          }, 200);
         }
       });
       this.showHoursub = false;
@@ -243,6 +250,7 @@ export default {
       this.showHoursub = true;
       this.showcardMonth = true;
       this.showcardPeople = false;
+      this.showEvemts = false;
     },
     changePeople() {
       // console.log("changePeople");
@@ -250,6 +258,12 @@ export default {
       this.tableDataPeople.forEach(el => (this.totalHours += el.useHour));
       this.showcardMonth = false;
       this.showcardPeople = true;
+    },
+    dayChange(day) {
+      console.log(day);
+    },
+    monthChange(month) {
+      console.log(month);
     }
   }
 };
@@ -300,6 +314,14 @@ export default {
   height: 100%;
   .cal-wrapper {
     padding: 0 50px;
+    .cal-header {
+      display: flex;
+      justify-content: center;
+      .l,
+      .r {
+        display: none;
+      }
+    }
   }
 }
 </style>

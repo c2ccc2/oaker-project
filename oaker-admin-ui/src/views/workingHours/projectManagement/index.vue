@@ -108,17 +108,19 @@
 
             <el-table-column prop="projectStatus" label="状态" align="center">
               <template slot-scope="scope">
-                <p>
+                <p v-if="scope.row.projectStatus == '归档'"> <el-tag type="danger">结束</el-tag></p>
+                <p v-else>
                   <el-tag type="success" v-if="scope.row.status">正常</el-tag>
-                  <el-tag type="danger" v-else>已超出</el-tag>
+                  <el-tag type="warning" v-else>已超出</el-tag>
                 </p>
+                
               </template>
             </el-table-column>
-            <el-table-column prop="createTime" label="昨天上报" align="center">
+            <!-- <el-table-column prop="createTime" label="昨天上报" align="center">
               <template slot-scope="scope">
                 <p>{{ scope.row.yesFill }}/{{ scope.row.yesMustFill }}</p>
               </template>
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column prop="createTime" label="今天上报" align="center">
               <template slot-scope="scope">
                 <p>{{ scope.row.todayFill }}/{{ scope.row.todayMustFill }}</p>
@@ -132,6 +134,7 @@
                   type="primary"
                   size="small"
                   plain
+                  v-hasPermi="['system:project:stat:fill:detail']"
                   >上报记录</el-button
                 >
                 <el-button
@@ -139,6 +142,7 @@
                   type="primary"
                   size="small"
                   plain
+                  v-hasPermi="['system:project:stat:query']"
                   >工时明细</el-button
                 >
                 <el-button
@@ -146,7 +150,8 @@
                   type="primary"
                   size="small"
                   plain
-                  >项目详情</el-button
+                  v-hasPermi="['system:project:query']"
+                  >项目管理</el-button
                 >
               </template>
             </el-table-column>
@@ -290,7 +295,7 @@ export default {
       console.log(row);
       let projectId = row.projectId;
       console.log(projectId);
-      this.$router.push({ path: "projectSettingsHour", query: { projectId } });
+      this.$router.push({ path: "/projectManagement/projectSettingsHour", query: { projectId } });
     },
 
     handlerecord(row) {
@@ -299,14 +304,14 @@ export default {
       let totalHour = row.totalHour;
       console.log(projectId);
       this.$router.push({
-        path: "projectManagement/workingHoursForDetails",
+        path: "/projectManagement/workingHoursForDetails",
         query: { projectId, totalHour: row.useHour }
       });
     },
     handledetail(row) {
       let projectId = row.projectId;
       this.$router.push({
-        path: "projectManagement/hourSubsidiary",
+        path: "/projectManagement/hourSubsidiary",
         query: { projectId }
       });
     },

@@ -6,7 +6,7 @@ import Element from 'element-ui'
 import './assets/styles/element-variables.scss'
 
 import '@/assets/styles/index.scss' // global css
-import '@/assets/styles/ruoyi.scss' // ruoyi css
+import '@/assets/styles/jx.scss' // jx css
 import App from './App'
 import store from './store'
 import router from './router'
@@ -28,7 +28,7 @@ import {
   selectDictLabels,
   download,
   handleTree
-} from "@/utils/ruoyi";
+} from "@/utils/jx";
 import Pagination from "@/components/Pagination";
 // 自定义表格工具组件
 import RightToolbar from "@/components/RightToolbar"

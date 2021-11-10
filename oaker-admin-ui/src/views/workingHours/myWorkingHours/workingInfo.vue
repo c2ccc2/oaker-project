@@ -36,8 +36,11 @@
           >
             <el-input
               v-model.number="item.useHour"
+              max="8"
+              maxlength="1"
               placeholder="工时"
               style="width:60%"
+              @input="lookinput(item.hour)"
             ></el-input
             >小时
           </el-form-item>
@@ -112,9 +115,52 @@ export default {
         }
       });
     },
+    lookinput(value) {
+      let hoursum = 0;
+      this.form.projectHours.forEach(el => (hoursum += el.hour));
+
+      if (!value && value == " ") {
+        this.sunmitflag = true;
+        this.submitTips = "工时不能为空";
+        // value = 0;
+        if (value == 0) {
+          this.submitTips = "可以提交!";
+          this.sunmitflag = false;
+        }
+        // console.log(value)
+        // this.$message.error("工时不能为空");
+        // flag = false;
+      } else {
+        if (!Number.isInteger(value)) {
+          this.sunmitflag = true;
+          // this.$message.error("工时请输入数字值!");
+          this.submitTips = "工时请输入数字值!";
+
+          // flag = false;
+        } else {
+          if (value >= 9 || value < 0) {
+            this.sunmitflag = true;
+            // this.$message.error("工时范围为0-8小时!");
+            this.submitTips = "工时范围为0-8小时!";
+
+            // flag = false;
+          } else {
+            if (hoursum < 9) {
+              this.sunmitflag = false;
+              this.submitTips = "可以提交！";
+              // console.log(value);
+            } else {
+              this.sunmitflag = true;
+              // this.$message.error("总工时不能大于8小时!");
+              this.submitTips = "总工时不能大于8小时!当前为" + hoursum + "小时";
+            }
+          }
+        }
+      }
+    },
     handleDetailHour() {
       console.log("修改工时");
-      let _this=this
+      let _this = this;
 
       let data = {
         hourId: this.hourId,
@@ -139,7 +185,7 @@ export default {
           console.log(res);
           if (res.code == 200) {
             this.$message.success(res.msg);
-            _this.$router.go(-1)
+            _this.$router.go(-1);
             // this.$router.push({path:"/workingHours/myWorkingHours"})
           } else {
             this.$message.danger(res.msg);

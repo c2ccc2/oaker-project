@@ -1,7 +1,6 @@
 package com.oaker.web.core.config;
 
 import com.oaker.common.config.OakerConfig;
-import io.swagger.annotations.ApiOperation;
 import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -51,8 +50,8 @@ public class SwaggerConfig {
     /**
      * 创建API
      */
-    @Bean
-    public Docket createRestApi() {
+    @Bean("MhApi")
+    public Docket createMhApi() {
         return new Docket(DocumentationType.OAS_30)
                 // 是否启用Swagger
                 .enable(enabled)
@@ -61,16 +60,43 @@ public class SwaggerConfig {
                 // 设置哪些接口暴露给Swagger展示
                 .select()
                 // 扫描所有有注解的api，用这种方式更灵活
-                .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
+                // .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
                 // 扫描指定包中的swagger注解
-                // .apis(RequestHandlerSelectors.basePackage("com.ruoyi.project.tool.swagger"))
+                .apis(RequestHandlerSelectors.basePackage("com.oaker.web.controller.tool.mh"))
                 // 扫描所有 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
                 .build()
                 /* 设置安全模式，swagger可以设置访问token */
                 .securitySchemes(securitySchemes())
                 .securityContexts(securityContexts())
-                .pathMapping(pathMapping);
+                .pathMapping(pathMapping)
+                .groupName("项目工时模块");
+    }
+
+    /**
+     * 创建API
+     */
+    @Bean("ProtoApi")
+    public Docket createProtoApi() {
+        return new Docket(DocumentationType.OAS_30)
+                // 是否启用Swagger
+                .enable(enabled)
+                // 用来创建该API的基本信息，展示在文档的页面中（自定义展示的信息）
+                .apiInfo(apiInfo())
+                // 设置哪些接口暴露给Swagger展示
+                .select()
+                // 扫描所有有注解的api，用这种方式更灵活
+                // .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
+                // 扫描指定包中的swagger注解
+                .apis(RequestHandlerSelectors.basePackage("com.oaker.web.controller.tool.pr"))
+                // 扫描所有 .apis(RequestHandlerSelectors.any())
+                .paths(PathSelectors.any())
+                .build()
+                /* 设置安全模式，swagger可以设置访问token */
+                .securitySchemes(securitySchemes())
+                .securityContexts(securityContexts())
+                .pathMapping(pathMapping)
+                .groupName("项目原型模块");
     }
 
     /**
@@ -116,7 +142,7 @@ public class SwaggerConfig {
                 // 设置标题
                 .title("标题：九橡项目管理系统_接口文档")
                 // 描述
-                .description("描述：用于管理集团旗下公司的人员信息,具体包括XXX,XXX模块...")
+                .description("描述：用于项目开发周期中，各项事务管理。")
                 // 作者信息
                 .contact(new Contact(oakerConfig.getName(), null, null))
                 // 版本

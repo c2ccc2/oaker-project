@@ -105,9 +105,9 @@ export function getMyHourList(endDate, startDate) {
   })
 }
 // 用户查询参与项目不包含已归档的项目
-export function getMyActorProject() {
+export function getMyActorProject(date) {
   return request({
-    url: '/system/project/user/my/project',
+    url: '/system/project/user/my/project?date='+date,
     method: 'get'
   })
 }

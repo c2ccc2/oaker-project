@@ -41,15 +41,14 @@ public class PermissionService {
      * @return 用户是否具备某权限
      */
     public boolean hasPermi(String permission) {
-        return true;
-        /*if (StringUtils.isEmpty(permission)) {
+        if (StringUtils.isEmpty(permission)) {
             return false;
         }
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         if (StringUtils.isNull(loginUser) || CollectionUtils.isEmpty(loginUser.getPermissions())) {
             return false;
         }
-        return hasPermissions(loginUser.getPermissions(), permission);*/
+        return hasPermissions(loginUser.getPermissions(), permission);
     }
 
     /**

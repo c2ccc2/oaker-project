@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -83,7 +84,8 @@ public class ProjectUserApi {
      */
     @GetMapping("/my/project")
     @ApiOperation("用户查询参与项目不包含归档项目")
-    public UserProjectShortVO queryMyProject() {
+    @ApiImplicitParam(name = "date", value = "日期时间", dataType = "Date")
+    public UserProjectShortVO queryMyProject(Date date) {
         return new UserProjectShortVO();
     }
 

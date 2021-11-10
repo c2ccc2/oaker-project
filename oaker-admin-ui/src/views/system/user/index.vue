@@ -402,7 +402,8 @@
               prop="userName"
             >
               <el-input
-                v-model="form.userName"
+                v-model.trim="form.userName"
+                @input="accountInput"
                 placeholder="请输入用户名称"
                 maxlength="30"
               />
@@ -769,7 +770,7 @@ export default {
         // this.setarray(this.peopleTotalInfo)
         // this.peopleTotalInfo.splice(-1,1)
         console.log("unique", this.unique(this.peopleTotalInfo));
-        this.peopleTotalInfo=this.unique(this.peopleTotalInfo)
+        this.peopleTotalInfo = this.unique(this.peopleTotalInfo);
         console.log("peopleTotalInfo", this.peopleTotalInfo);
 
         //peopleTotalInfo
@@ -799,7 +800,6 @@ export default {
       );
     },
     unique(newarr) {
-      
       let arr = newarr;
       let result = {};
       let finalResult = [];
@@ -1052,6 +1052,19 @@ export default {
     // 提交上传文件
     submitFileForm() {
       this.$refs.upload.submit();
+    },
+    accountInput(val) {
+      //账号的实时输入
+      console.log(val);
+      let codeReg = new RegExp("[A-Za-z0-9]+"), //正则 英文+数字；
+        len = val.length,
+        str = "";
+      for (var i = 0; i < len; i++) {
+        if (codeReg.test(val[i])) {
+          str += val[i];
+        }
+      }
+      this.form.userName = str;
     }
   }
 };

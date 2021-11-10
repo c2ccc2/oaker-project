@@ -51,3 +51,9 @@ export function getCodeImg() {
 	timeout: 20000
   })
 }
+// 获取版本号
+export function loginversion(){
+  return request({
+    url:process.env.VUE_APP_BASE_API
+  })
+}

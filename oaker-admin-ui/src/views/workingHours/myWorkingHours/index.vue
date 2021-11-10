@@ -70,7 +70,7 @@
                     <p v-else>{{ scope.row.createTime }}</p>
                   </template>
                 </el-table-column>
-                <el-table-column prop="address" label="详情">
+                <!-- <el-table-column prop="address" label="详情">
                   <template slot-scope="scope">
                     <el-button
                       type="primary"
@@ -81,18 +81,44 @@
                       >查看详情</el-button
                     >
                   </template>
-                </el-table-column>
-                <el-table-column prop="address" label="提交">
+                </el-table-column> -->
+                <el-table-column
+                  prop="address"
+                  width="200"
+                  label="提交"
+                  align="center"
+                >
                   <template slot-scope="scope">
+                    <el-button
+                      type="primary"
+                      size="mini"
+                      @click="lookTimeInfo(scope.row)"
+                      v-show="!(scope.row.status != 1)"
+                      
+                      round
+                      v-hasPermi="['mh:hour:detail']"
+                      >查看详情</el-button
+                    >
                     <el-button
                       type="primary"
                       size="mini"
                       round
                       v-show="!(scope.row.status == 3 || scope.row.status == 1)"
+                      
                       :disabled="scope.row.substatus"
                       @click="submitWorking(scope.row)"
+                      v-hasPermi="['mh:hour:add']"
                       >提交工时</el-button
                     >
+                    <!-- <el-button
+                      type="primary"
+                      size="mini"
+                      round
+                      v-show="!(scope.row.status == 3 || scope.row.status == 1)"
+                      :disabled="scope.row.substatus"
+                      @click="askForLeave(scope.row)"
+                      >请假</el-button
+                    > -->
                   </template>
                 </el-table-column>
               </el-table>
@@ -100,7 +126,7 @@
           </el-card>
         </div></el-col
       >
-      <el-col :span="8"
+      <el-col :span="8" v-hasPermi="['mh:project:user:all']"
         ><div class="grid-content bg-purple-dark">
           <el-card class="box-card">
             <div slot="header" class="clearfix ">
@@ -139,7 +165,7 @@
     <el-dialog
       title="工时填报"
       :visible.sync="dialogFormVisible"
-      style="width:55%;margin:0 auto"
+      style="width:100%;margin:0 auto"
     >
       <el-form :model="form" status-icon :rules="rules">
         <el-form-item
@@ -226,15 +252,15 @@ export default {
       options: [
         {
           value: "a",
-          label: "进行中"
+          label: "正在进行"
         },
         {
           value: "b",
-          label: "运维中"
+          label: "正在运维"
         },
         {
           value: "c",
-          label: "已归档"
+          label: "已经归档"
         }
       ],
       value: "",
@@ -272,31 +298,31 @@ export default {
     this.init();
   },
   methods: {
-    init() {
+    init(flag) {
       this.getdate();
       this.bzclick = true;
       this.byclick = false;
-      // console.log(this.getTayWeek());
-      //** */
-
       this.dateInfos[this.getTayWeek()];
-      //** */
-
-      // console.log(this.dateArr);
-      // let dateweek = this.getTayWeek();
-      console.log("this.weekinfo", this.weekinfo);
+      // console.log("this.weekinfo", this.weekinfo);
       let dateinfo = this.dateInfos[this.weekinfo];
-      console.log("dateinfo", dateinfo);
+      // console.log("dateinfo", dateinfo);
       let tempdate = new Date();
       this.thisMonth = parseInt(tempdate.getMonth());
-      console.log("thisMonth", this.thisMonth);
+      // console.log("thisMonth", this.thisMonth);
       this.dateArr.weekStartDate = dateinfo.startDate;
       this.dateArr.weekEndDate = dateinfo.endDate;
       getMyHourList(this.dateArr.weekEndDate, this.dateArr.weekStartDate).then(
         res => {
           // console.log(res);
           if (res.code == 200) {
-            this.tableData = res.data;
+            // console.log('flag',flag)
+            if (flag == true) {
+              // return ;
+              // console.log('init不赋值')
+            } else {
+              // console.log('init赋值')
+              this.tableData = res.data;
+            }
             this.tableData.forEach(el => {
               // if (el.status == '2' || '4') {
               if (el.status == "2" || el.status == "4") {
@@ -311,7 +337,7 @@ export default {
               }
               // el.createTime=el.createTime.slice(12,16)
             });
-            console.log("this.tableData", this.tableData);
+            // console.log("this.tableData", this.tableData);
           }
         }
       );
@@ -360,7 +386,7 @@ export default {
             this.tableData.forEach(el => {
               let newdate = new Date(Date.parse(el.date.replace(/-/g, "/")));
               // el.createTime = el.createTime.substr(5, 11).replace(/T/, " ");
-              console.log(el.createTime);
+              // console.log(el.createTime);
               el.week = this.weekArr[newdate.getDay()];
             });
             // console.log(res);
@@ -369,10 +395,10 @@ export default {
       );
     },
     myMonth() {
-      this.init();
+      this.init(true);
       this.bzclick = false;
       this.byclick = true;
-      console.log("this.monthInfo", this.thisMonth, this.monthInfo);
+      // console.log("this.monthInfo", this.thisMonth, this.monthInfo);
       this.dateArr.monthEndDate = this.monthInfo[this.thisMonth].endDonthDate;
       this.dateArr.monthStartDate = this.monthInfo[
         this.thisMonth
@@ -383,15 +409,16 @@ export default {
       ).then(res => {
         // console.log(res);
         if (res.code == 200) {
-          this.tableData = res.data;
-          this.tableData.forEach(el => {
-            let newdate = new Date(Date.parse(el.date.replace(/-/g, "/")));
-            el.week = this.weekArr[newdate.getDay()];
-          });
-          // console.log(res);
+          setTimeout(() => {
+            this.tableData = res.data;
+            this.tableData.forEach(el => {
+              let newdate = new Date(Date.parse(el.date.replace(/-/g, "/")));
+              el.week = this.weekArr[newdate.getDay()];
+            });
+            // console.log(res);
+          }, 200);
         }
       });
-      // this.init();
     },
     lastMonth() {
       this.bzclick = false;
@@ -590,20 +617,20 @@ export default {
     },
 
     lookTimeInfo(row) {
-      console.log("查看工时详情", row.id);
+      // console.log("查看工时详情", row.id);
       this.$router.push({
-        path: "myWorkingHours/workingInfo",
+        path: "/workingHours/workingInfo",
         query: { id: row.id, fillDate: row.date }
       });
     },
     editFillInWorkingHours() {
-      console.log("填报工时");
+      // console.log("填报工时");
       this.$router.push({ path: "myWorkingHours/fillInWorkingHours" });
     },
     submitWorking(row) {
       console.log("提交工时", row);
       // this.$nextTick(()=>{
-      this.getprojectArr();
+      this.getprojectArr(row.date);
       this.hourTime = row.date;
       this.dialogFormVisible = true;
       // });
@@ -641,7 +668,7 @@ export default {
             if (hoursum < 9) {
               this.sunmitflag = false;
               this.submitTips = "可以提交！";
-              console.log(value);
+              // console.log(value);
             } else {
               this.sunmitflag = true;
               // this.$message.error("总工时不能大于8小时!");
@@ -652,7 +679,7 @@ export default {
       }
     },
     handleSubmit() {
-      console.log("sub1", this.form);
+      // console.log("sub1", this.form);
       // let data = {
       //   date: this.hourTime,
       //   projectHours: this.form
@@ -676,7 +703,7 @@ export default {
           //       flag = false;
           //     } else {
           //       this.sunmitflag=false
-          //       console.log(el.hour);
+          //      // console.log(el.hour);
           //     }
           //   }
           // }
@@ -687,17 +714,17 @@ export default {
           delete el.projectStatus;
         }
       });
-      console.log("hoursum", hoursum);
+      // console.log("hoursum", hoursum);
       if (hoursum > 8) {
         this.$message.error("工时之和不得超过8小时，当前为" + hoursum + "小时");
         flag = false;
       }
-      console.log("sub2", this.form);
-      console.log("flag", flag);
+      // console.log("sub2", this.form);
+      // console.log("flag", flag);
       if (flag) {
-        console.log("我请求了", this.form);
+        // console.log("我请求了", this.form);
         createHour(this.form).then(res => {
-          console.log(res);
+          // console.log(res);
           if (res.code == 200) {
             this.init();
             this.dialogFormVisible = false;
@@ -707,9 +734,9 @@ export default {
       }
     },
     changeStatus(value) {
-      console.log(value);
+      // console.log(value);
       getMyProjectStatus(value).then(res => {
-        console.log(res);
+        // console.log(res);
         if (res.code == 200) {
           this.myProject = res.data;
           this.myProject.forEach(el => {
@@ -890,14 +917,14 @@ export default {
       }
       // console.log(this.dateInfos);
     },
-    getprojectArr() {
-      getMyActorProject().then(res => {
-        console.log(res);
+    getprojectArr(date) {
+      getMyActorProject(date).then(res => {
+        // console.log(res);
         this.form.projectHours = [];
         if (res.code == 200) {
           this.projectArr = res.data;
           this.projectArr.forEach(el => (el.hour = 0));
-          console.log("projectArr", this.projectArr);
+          // console.log("projectArr", this.projectArr);
           // this.form.projectHours = Object.assign(
           //   [],
           //   JSON.parse(JSON.stringify(this.projectArr))
@@ -909,10 +936,13 @@ export default {
               Object.assign({}, JSON.parse(JSON.stringify(el)))
             )
           );
-          console.log("this.form", this.form);
-          console.log(this.projectArr);
+          // console.log("this.form", this.form);
+          // console.log(this.projectArr);
         }
       });
+    },
+    askForLeave() {
+      alert("不批，滚蛋！");
     }
   }
 };
@@ -961,7 +991,7 @@ export default {
   width: 100%;
   padding: 10px;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid rgba(80, 81, 85, 0.267);
 }
@@ -993,5 +1023,8 @@ export default {
   color: red;
   font-size: 12px;
   margin: 0 auto;
+}
+::v-deep .el-dialog__wrapper .el-dialog {
+  width: 35%;
 }
 </style>

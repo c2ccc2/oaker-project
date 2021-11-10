@@ -151,7 +151,7 @@ public class ProjectController extends BaseController {
         MhProjectListVO vo = new MhProjectListVO();
         BeanUtils.copyProperties(mhProject, vo);
         SysUser sysUser = userService.selectUserById(mhProject.getProjectManager());
-        vo.setProjectManagerName(sysUser.getUserName());
+        vo.setProjectManagerName(sysUser.getNickName());
         String status = sysDictDataService.selectDictLabel(DictTypeConstants.PROJECT_STATUS_TYPE, mhProject.getProjectStatus());
         vo.setProjectStatusName(status);
         vo.setManHour(this.getProjectManHour(mhProject.getProjectId()));
@@ -183,7 +183,7 @@ public class ProjectController extends BaseController {
      * 修改项目状态
      */
     @PutMapping("/status")
-    @PreAuthorize("@ss.hasPermi('system:project:edit')")
+    @PreAuthorize("@ss.hasPermi('system:project:status:edit')")
     @Log(title = "项目状态设置", businessType = BusinessType.UPDATE)
     public AjaxResult setStatus(@NotNull(message = "项目id不能为空") Long projectId,
                                 @NotBlank(message = "项目状态不能为空") String projectStatus) {

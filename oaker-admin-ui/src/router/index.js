@@ -26,17 +26,14 @@ import Layout from '@/layout'
  */
 
 // 公共路由
-export const constantRoutes = [
-  {
+export const constantRoutes = [{
     path: '/redirect',
     component: Layout,
     hidden: true,
-    children: [
-      {
-        path: '/redirect/:path(.*)',
-        component: (resolve) => require(['@/views/redirect'], resolve)
-      }
-    ]
+    children: [{
+      path: '/redirect/:path(.*)',
+      component: (resolve) => require(['@/views/redirect'], resolve)
+    }]
   },
   {
     path: '/login',
@@ -58,103 +55,191 @@ export const constantRoutes = [
     component: (resolve) => require(['@/views/error/401'], resolve),
     hidden: true
   },
+  // {
+  //   path: '/',
+  //   component: Layout,
+  //   redirect: 'index',
+  //   children: [{
+  //     path: 'index',
+  //     component: (resolve) => require(['@/views/index'], resolve),
+  //     // name: 'Index',
+  //     meta: {
+  //       title: '首页',
+  //       icon: 'dashboard',
+  //       affix: true
+  //     }
+  //   }]
+  // },
   {
     path: '',
     component: Layout,
     redirect: 'index',
-    children: [
-      {
-        path: 'index',
-        component: (resolve) => require(['@/views/index'], resolve),
-        name: 'Index',
-        meta: { title: '首页', icon: 'dashboard', affix: true }
+    children: [{
+      path: 'index',
+      component: (resolve) => require(['@/views/index'], resolve),
+      // name: 'Index',
+      meta: {
+        title: '首页',
+        icon: 'dashboard',
+        affix: true
       }
-    ]
+    }]
   },
   {
     path: '/user',
     component: Layout,
     hidden: true,
     redirect: 'noredirect',
-    children: [
+    children: [{
+      path: 'profile',
+      component: (resolve) => require(['@/views/system/user/profile/index'], resolve),
+      name: 'Profile',
+      meta: {
+        title: '个人中心',
+        icon: 'user'
+      }
+    }]
+  },
+  {
+    path: '/workingHours',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [{
+      path: 'workingInfo',
+      component: (resolve) => require(['@/views/workingHours/myWorkingHours/workingInfo'], resolve),
+      name: 'WorkingInfo',
+      meta: {
+        title: '查看工时详情',
+        icon: ''
+      }
+    }]
+  },
+  {
+    path: '/projectManagement',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [{
+        path: "workingHoursForDetails",
+        component: (resolve) => require(['@/views/workingHours/projectManagement/workingHoursForDetails'], resolve),
+        name: 'WorkingHoursForDetails',
+        meta: {
+          title: '上报记录',
+          icon: ''
+        }
+      },
       {
-        path: 'profile',
-        component: (resolve) => require(['@/views/system/user/profile/index'], resolve),
-        name: 'Profile',
-        meta: { title: '个人中心', icon: 'user' }
+        path: "hourSubsidiary",
+        component: (resolve) => require(['@/views/workingHours/projectManagement/hourSubsidiary'], resolve),
+        name: 'HourSubsidiary',
+        meta: {
+          title: '工时明细',
+          icon: ''
+        }
+      },
+      {
+        path: "projectSettingsHour",
+        component: (resolve) => require(['@/views/workingHours/projectSettingsHour/index'], resolve),
+        // name: 'WorkingHours',
+        meta: {
+          title: '项目详情',
+          icon: ''
+        }
       }
     ]
+  },
+  {
+    path: '/system/project-Set',
+    component: Layout,
+    hidden: true,
+    children: [{
+      path: 'projectSettings',
+      component: (resolve) => require(['@/views/system/projectSettings/index'], resolve),
+      name: 'ProjectSettings',
+      meta: {
+        title: '项目设置',
+        activeMenu: 'system/project'
+      }
+    }]
   },
   {
     path: '/system/user-auth',
     component: Layout,
     hidden: true,
-    children: [
-      {
-        path: 'role/:userId(\\d+)',
-        component: (resolve) => require(['@/views/system/user/authRole'], resolve),
-        name: 'AuthRole',
-        meta: { title: '分配角色', activeMenu: '/system/user'}
+    children: [{
+      path: 'role/:userId(\\d+)',
+      component: (resolve) => require(['@/views/system/user/authRole'], resolve),
+      name: 'AuthRole',
+      meta: {
+        title: '分配角色',
+        activeMenu: '/system/user'
       }
-    ]
+    }]
   },
   {
     path: '/system/role-auth',
     component: Layout,
     hidden: true,
-    children: [
-      {
-        path: 'user/:roleId(\\d+)',
-        component: (resolve) => require(['@/views/system/role/authUser'], resolve),
-        name: 'AuthUser',
-        meta: { title: '分配用户', activeMenu: '/system/role'}
+    children: [{
+      path: 'user/:roleId(\\d+)',
+      component: (resolve) => require(['@/views/system/role/authUser'], resolve),
+      name: 'AuthUser',
+      meta: {
+        title: '分配用户',
+        activeMenu: '/system/role'
       }
-    ]
+    }]
   },
   {
     path: '/system/dict-data',
     component: Layout,
     hidden: true,
-    children: [
-      {
-        path: 'index/:dictId(\\d+)',
-        component: (resolve) => require(['@/views/system/dict/data'], resolve),
-        name: 'Data',
-        meta: { title: '字典数据', activeMenu: '/system/dict'}
+    children: [{
+      path: 'index/:dictId(\\d+)',
+      component: (resolve) => require(['@/views/system/dict/data'], resolve),
+      name: 'Data',
+      meta: {
+        title: '字典数据',
+        activeMenu: '/system/dict'
       }
-    ]
+    }]
   },
   {
     path: '/monitor/job-log',
     component: Layout,
     hidden: true,
-    children: [
-      {
-        path: 'index',
-        component: (resolve) => require(['@/views/monitor/job/log'], resolve),
-        name: 'JobLog',
-        meta: { title: '调度日志', activeMenu: '/monitor/job'}
+    children: [{
+      path: 'index',
+      component: (resolve) => require(['@/views/monitor/job/log'], resolve),
+      name: 'JobLog',
+      meta: {
+        title: '调度日志',
+        activeMenu: '/monitor/job'
       }
-    ]
+    }]
   },
   {
     path: '/tool/gen-edit',
     component: Layout,
     hidden: true,
-    children: [
-      {
-        path: 'index/:tableId(\\d+)',
-        component: (resolve) => require(['@/views/tool/gen/editTable'], resolve),
-        name: 'GenEdit',
-        meta: { title: '修改生成配置', activeMenu: '/tool/gen'}
+    children: [{
+      path: 'index/:tableId(\\d+)',
+      component: (resolve) => require(['@/views/tool/gen/editTable'], resolve),
+      name: 'GenEdit',
+      meta: {
+        title: '修改生成配置',
+        activeMenu: '/tool/gen'
       }
-    ]
+    }]
   }
 ]
 
 export default new Router({
   // mode: 'history', // 去掉url中的#
   mode: 'hash', // 去掉url中的#
-  scrollBehavior: () => ({ y: 0 }),
+  scrollBehavior: () => ({
+    y: 0
+  }),
   routes: constantRoutes
 })

@@ -44,6 +44,7 @@
               type="primary"
               size="mini"
               @click="newProject"
+              v-hasPermi="['system:project:add']"
               >创建项目</el-button
             >
           </el-row></span
@@ -51,11 +52,7 @@
       </div>
       <div class="text item">
         <template>
-          <el-table
-            :data="tableData"
-            border
-            style="width: 100%"
-          >
+          <el-table :data="tableData" border style="width: 100%">
             <el-table-column
               fixed
               type="index"
@@ -113,6 +110,7 @@
                   type="primary"
                   size="small"
                   plain
+                  v-hasPermi="['system:project:query']"
                   >项目设置</el-button
                 >
                 <el-button
@@ -407,7 +405,7 @@ export default {
     handleClick(row) {
       console.log(row.projectId);
       let projectId = row.projectId;
-      this.$router.push({ path: "projectSettings", query: { projectId } });
+      this.$router.push({ path: "/system/project-Set/projectSettings", query: { projectId } }); 
     },
 
     handlearchive(row) {

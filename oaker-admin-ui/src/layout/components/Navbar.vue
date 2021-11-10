@@ -1,11 +1,13 @@
 <template>
   <div class="navbar">
+    <!-- <logo v-if="showLogo" :collapse="isCollapse" /> -->
     <hamburger
       id="hamburger-container"
       :is-active="sidebar.opened"
       class="hamburger-container"
       @toggleClick="toggleSideBar"
     />
+    <!-- <logo v-if="showLogo" :collapse="isCollapse" /> -->
 
     <breadcrumb
       id="breadcrumb-container"
@@ -70,9 +72,12 @@ import Hamburger from "@/components/Hamburger";
 import Screenfull from "@/components/Screenfull";
 import SizeSelect from "@/components/SizeSelect";
 import Search from "@/components/HeaderSearch";
-import RuoYiGit from "@/components/RuoYi/Git";
-import RuoYiDoc from "@/components/RuoYi/Doc";
+// import jxGit from "@/components/jx/Git";
+// import jxDoc from "@/components/jx/Doc";
 import { getUserProfile } from "@/api/system/user";
+
+import Logo from "./Sidebar/Logo";
+
 
 export default {
   data() {
@@ -91,8 +96,9 @@ export default {
     Screenfull,
     SizeSelect,
     Search,
-    RuoYiGit,
-    RuoYiDoc
+    Logo
+    // jxGit,
+    // jxDoc
   },
   computed: {
     ...mapGetters(["sidebar", "avatar", "device"]),
@@ -154,6 +160,9 @@ export default {
           });
         })
         .catch(() => {});
+    },
+    showLogo() {
+      return this.$store.state.settings.sidebarLogo;
     }
   }
 };

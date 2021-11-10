@@ -18,6 +18,10 @@ spring:
     time-zone: GMT+8
     serialization:
       write-dates-as-timestamps: false
+  resources:
+    static-locations: classpath:/static/
+  mvc:
+    static-path-pattern: /static/**
 
 # 日志配置
 logging:
@@ -57,13 +61,6 @@ pagehelper:
   helperDialect: mysql
   supportMethodsArguments: true
   params: count=countSql
-
-# Swagger配置
-swagger:
-  # 是否开启swagger
-  enabled: true
-  # 请求前缀
-  pathMapping: /dev-api
 
 # 防止XSS攻击
 xss:

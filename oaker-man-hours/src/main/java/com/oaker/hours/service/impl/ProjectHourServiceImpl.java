@@ -77,7 +77,7 @@ public class ProjectHourServiceImpl extends ServiceImpl<ProjectHourMapper, Proje
         if (StringUtils.isNotBlank(projectStatus)) {
             ety.eq(Columns.Project.projectStatus, projectStatus);
         }
-        Integer count = projectService.selectCount(ety);
+        int count = projectService.selectCount(ety);
         if (count <= 0) {
             tableDataInfo.setCode(HttpStatus.SUCCESS);
             tableDataInfo.setRows(Collections.emptyList());

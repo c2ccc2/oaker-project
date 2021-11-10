@@ -102,6 +102,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/**/*.html",
                         "/**/*.css",
                         "/**/*.js",
+                        "/**/*.jpg",
+                        "/**/*.png",
                         "/profile/**"
                 ).permitAll()
                 .antMatchers("/common/download**").anonymous()

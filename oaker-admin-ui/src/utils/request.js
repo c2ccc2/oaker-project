@@ -1,14 +1,22 @@
 import axios from 'axios'
-import { Notification, MessageBox, Message } from 'element-ui'
+
+import qs from "qs"
+import {
+  Notification,
+  MessageBox,
+  Message
+} from 'element-ui'
 import store from '@/store'
-import { getToken } from '@/utils/auth'
+import {
+  getToken
+} from '@/utils/auth'
 import errorCode from '@/utils/errorCode'
 
 axios.defaults.headers['Content-Type'] = 'application/json;charset=utf-8'
 // 创建axios实例
 const service = axios.create({
   // axios中请求配置有baseURL选项，表示请求URL公共部分
-  baseURL: process.env.VUE_APP_BASE_API, 
+  baseURL: process.env.VUE_APP_BASE_API,
   // 超时
   timeout: 10000
 })
@@ -19,13 +27,19 @@ service.interceptors.request.use(config => {
   if (getToken() && !isToken) {
     config.headers['Authorization'] = 'Bearer ' + getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
   }
+  if ((config.method === 'post'||"put") && config.type === 'form') {
+    // console.log('config', config)
+    // config.data=JSON.parse(config.data)
+    config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
+    config.data = qs.stringify(config.data)
+  }
   // get请求映射params参数
   if (config.method === 'get' && config.params) {
     let url = config.url + '?';
     for (const propName of Object.keys(config.params)) {
       const value = config.params[propName];
       var part = encodeURIComponent(propName) + "=";
-      if (value !== null && typeof(value) !== "undefined") {
+      if (value !== null && typeof (value) !== "undefined") {
         if (typeof value === 'object') {
           for (const key of Object.keys(value)) {
             if (value[key] !== null && typeof (value[key]) !== 'undefined') {
@@ -45,8 +59,8 @@ service.interceptors.request.use(config => {
   }
   return config
 }, error => {
-    console.log(error)
-    Promise.reject(error)
+  console.log(error)
+  Promise.reject(error)
 })
 
 // 响应拦截器
@@ -57,11 +71,10 @@ service.interceptors.response.use(res => {
     const msg = errorCode[code] || res.data.msg || errorCode['default']
     if (code === 401) {
       MessageBox.confirm('登录状态已过期，您可以继续留在该页面，或者重新登录', '系统提示', {
-          confirmButtonText: '重新登录',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }
-      ).then(() => {
+        confirmButtonText: '重新登录',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
         store.dispatch('LogOut').then(() => {
           location.href = '/';
         })
@@ -84,14 +97,14 @@ service.interceptors.response.use(res => {
   },
   error => {
     console.log('err' + error)
-    let { message } = error;
+    let {
+      message
+    } = error;
     if (message == "Network Error") {
       message = "后端接口连接异常";
-    }
-    else if (message.includes("timeout")) {
+    } else if (message.includes("timeout")) {
       message = "系统接口请求超时";
-    }
-    else if (message.includes("Request failed with status code")) {
+    } else if (message.includes("Request failed with status code")) {
       message = "系统接口" + message.substr(message.length - 3) + "异常";
     }
     Message({

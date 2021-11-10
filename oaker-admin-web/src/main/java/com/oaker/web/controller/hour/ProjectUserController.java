@@ -42,7 +42,7 @@ public class ProjectUserController extends BaseController {
      * 增加项目成员
      */
     @PostMapping("/create")
-    @PreAuthorize("@ss.hasPermi('mh:project:edit')")
+    @PreAuthorize("@ss.hasPermi('mh:project:user:add')")
     @Log(title = "项目人员管理", businessType = BusinessType.INSERT)
     public AjaxResult save(@Validated @RequestBody ProjectUserSaveDTO projectUserSaveDTO) {
         return toAjax(projectUserService.create(projectUserSaveDTO));
@@ -64,7 +64,7 @@ public class ProjectUserController extends BaseController {
      * @return
      */
     @PutMapping("/remove")
-    @PreAuthorize("@ss.hasPermi('mh:project:edit')")
+    @PreAuthorize("@ss.hasPermi('mh:project:user:remove')")
     public AjaxResult removeUser(@NotNull(message = "项目id不能为空") Long projectId
             ,@NotNull(message = "人员id不能为空") Long[] userIds) {
         boolean result = projectUserService.removeUser(projectId, Arrays.asList(userIds));
@@ -78,7 +78,7 @@ public class ProjectUserController extends BaseController {
      * @return
      */
     @GetMapping("/select")
-    @PreAuthorize("@ss.hasPermi('mh:project:edit')")
+    @PreAuthorize("@ss.hasPermi('mh:project:user:add')")
     public AjaxResult selectList(@NotNull(message = "项目id不能为空") Long projectId, String nickName) {
         return AjaxResult.success(projectUserService.selectList(projectId, nickName));
     }
@@ -88,7 +88,7 @@ public class ProjectUserController extends BaseController {
      * @return
      */
     @GetMapping("/my/project")
-    @PreAuthorize("@ss.hasPermi('mh:project:hour')")
+    // @PreAuthorize("@ss.hasPermi('mh:project:hour')")
     public AjaxResult queryMyProject(Date date) {
         Long userId = SecurityUtils.getUserId();
         return AjaxResult.success(projectUserService.queryMyProject(userId, date));
@@ -99,7 +99,7 @@ public class ProjectUserController extends BaseController {
      * @return
      */
     @GetMapping("/my/project/all")
-    @PreAuthorize("@ss.hasPermi('mh:hour:list')")
+    @PreAuthorize("@ss.hasPermi('mh:project:user:all')")
     public AjaxResult userProjects(String projectStatus) {
         Long userId = SecurityUtils.getUserId();
         List<UserProjectShortVO> vos = projectUserService.userProjects(userId, projectStatus);

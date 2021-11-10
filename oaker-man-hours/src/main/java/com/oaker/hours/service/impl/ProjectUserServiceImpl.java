@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.oaker.common.core.domain.entity.SysUser;
 import com.oaker.common.enums.UserStatus;
 import com.oaker.common.enums.UserTypeEnum;
+import com.oaker.common.utils.DateUtils;
 import com.oaker.common.utils.SecurityUtils;
 import com.oaker.common.utils.StringUtils;
 import com.oaker.hours.doman.columns.Columns;
@@ -165,6 +166,7 @@ public class ProjectUserServiceImpl extends ServiceImpl<ProjectUserMapper, Proje
         if (Objects.isNull(date)) {
             date = new Date();
         }
+        date = DateUtils.getFinallyDate(date);
         List<UserProjectShortVO> vos = baseMapper.queryUserProject(userId, date);
         if (CollectionUtils.isEmpty(vos)) {
             return Collections.emptyList();

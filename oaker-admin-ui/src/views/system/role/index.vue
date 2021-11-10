@@ -199,8 +199,8 @@
                 v-hasPermi="['system:role:edit']"
                 >数据权限</el-dropdown-item
               >
-              <!-- <el-dropdown-item command="handleAuthUser" icon="el-icon-user"
-                v-hasPermi="['system:role:edit']">分配用户</el-dropdown-item> -->
+              <el-dropdown-item command="handleAuthUser" icon="el-icon-user"
+                v-hasPermi="['system:role:edit']">分配用户</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </template>

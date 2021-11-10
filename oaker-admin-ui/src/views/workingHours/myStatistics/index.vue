@@ -35,7 +35,7 @@
             >{{ stat.missFillNum }}天</el-descriptions-item
           >
           <el-descriptions-item label="总计"
-            >{{ (stat.totalHour/8).toFixed(2) }}人天（{{
+            >{{ (stat.totalHour / 8).toFixed(2) }}人天（{{
               stat.totalHour
             }}工时）</el-descriptions-item
           >
@@ -43,8 +43,18 @@
       </div>
       <div class="text item">
         <el-button-group>
-          <el-button type="primary" @click="showstreamline">精简模式</el-button>
-          <el-button type="primary" @click="showdetail">详细模式</el-button>
+          <el-button
+            type="primary"
+            @click="showstreamline"
+            v-hasPermi="['mh:hour:stat']"
+            >精简模式</el-button
+          >
+          <el-button
+            type="primary"
+            @click="showdetail"
+            v-hasPermi="['mh:hour:stat:detail']"
+            >详细模式</el-button
+          >
         </el-button-group>
       </div>
       <div class="text item">
@@ -94,6 +104,20 @@
               @monthChanged=""
               @dayChanged=""
             ></vue-event-calendar>
+            <!-- <el-table :data="detailInfo" style="width: 100%"> -->
+            <!-- <el-table :data="demoEvents" style="width: 100%">
+               <el-table-column type="index" label="序号" width="180">
+              </el-table-column>
+              <el-table-column prop="date" label="日期" width="180">
+              </el-table-column>
+              <el-table-column prop="name" label="人员" width="180">
+              </el-table-column>
+              <el-table-column prop="address" label="岗位"> </el-table-column>
+              <el-table-column prop="title" label="项目"> </el-table-column>
+              <el-table-column prop="address" label="项目所属工作组"> </el-table-column>
+              <el-table-column prop="useHour" label="工时"> </el-table-column>
+              <el-table-column prop="address" label="提交时间"> </el-table-column>
+            </el-table> -->
           </template>
           <!-- <template>
             <vue-event-calendar :events="demoEvents">
@@ -120,7 +144,7 @@ export default {
     return {
       showEvents: true,
       dataMonth: "",
-      showStreamline: true,
+      showStreamline: false,
       datetayMonth: "",
       stat: {},
       peopleday: "",
@@ -134,6 +158,7 @@ export default {
   created() {
     // console.log(object)
     this.gettayMonth();
+    this.showdetail();
     this.init();
   },
   methods: {
@@ -155,6 +180,9 @@ export default {
           // console.log(this.stat);
         }
       });
+    },
+    getHourDetail() {
+      let date = this.datetayMonth;
       getHourStatDetail(date).then(res => {
         // console.log(res);
         if (res.code == 200) {
@@ -166,10 +194,12 @@ export default {
               el.projectHours.forEach(dl => {
                 let title = dl.projectName;
                 let desc = "本项目所用工时：" + dl.useHour + "小时";
+                let useHour=dl.useHour
                 let data = {
                   date,
                   title,
-                  desc
+                  desc,
+                  useHour
                 };
                 detailArr.push(data);
               });
@@ -213,6 +243,7 @@ export default {
       this.showEvemts = false;
     },
     showdetail() {
+      this.getHourDetail();
       setTimeout(() => {
         let eventwrapper = document.querySelector(".events-wrapper");
         let eventdate = document.querySelector(".date");
@@ -265,6 +296,14 @@ export default {
   height: 100%;
   .cal-wrapper {
     padding: 0 50px;
+    .cal-header {
+      display: flex;
+      justify-content: center;
+      .l,
+      .r {
+        display: none;
+      }
+    }
   }
 }
 // ::v-deep .events-wrapper{
@@ -274,4 +313,7 @@ export default {
 ::v-deep .myevents-wrapper {
   background: #fff;
 }
+// ::v-deep .cal-header {
+//   display: flex;
+// }
 </style>

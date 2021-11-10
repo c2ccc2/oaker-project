@@ -12,6 +12,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         LEFT JOIN sys_project AS p ON pu.project_id = p.project_id
         <where>
             pu.user_id = #{userId}
+            AND p.deleted = 0
             AND pu.status = 1
             <if test="projectStatus != null and projectStatus != ''">
                 AND p.project_status = #{projectStatus}

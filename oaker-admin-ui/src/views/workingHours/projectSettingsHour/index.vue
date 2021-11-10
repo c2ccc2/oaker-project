@@ -3,10 +3,30 @@
     <el-form class="demo-form-inline">
       <el-form-item>
         <el-row>
-          <el-button type="primary" @click="showCard = 1">项目概要</el-button>
-          <el-button type="primary" @click="showCard = 2">人员管理</el-button>
-          <el-button type="primary" @click="showCard = 3">工时设置</el-button>
-          <el-button type="primary" @click="showCard = 4">项目管理</el-button>
+          <el-button
+            type="primary"
+            @click="showCard = 1"
+            v-hasPermi="['system:project:query']"
+            >项目概要</el-button
+          >
+          <el-button
+            type="primary"
+            @click="showCard = 2"
+            v-hasPermi="['mh:project:user:list']"
+            >人员管理</el-button
+          >
+          <el-button
+            type="primary"
+            @click="showCard = 3"
+            v-hasPermi="['system:project:hour:edit']"
+            >工时设置</el-button
+          >
+          <el-button
+            type="primary"
+            @click="showCard = 4"
+            v-hasPermi="['system:project:status:edit']"
+            >项目管理</el-button
+          >
         </el-row>
       </el-form-item>
       <el-form-item>
@@ -19,6 +39,7 @@
               style="float: right"
               type="primary"
               @click="editprojectdetail"
+              v-hasPermi="['system:project:edit']"
               >编辑</el-button
             >
           </div>
@@ -65,6 +86,7 @@
                     style="float: right"
                     type="primary"
                     @click="addpeople"
+                    v-hasPermi="['mh:project:user:add']"
                     >添加人员</el-button
                   >
                 </template>
@@ -109,7 +131,9 @@
                         </div>
                         <div v-else class="block">
                           <el-image
-                            :src="require('../../../assets/images/OAK_defalutImg.gif')"
+                            :src="
+                              require('../../../assets/images/OAK_defalutImg.gif')
+                            "
                           ></el-image>
                         </div>
                       </div>
@@ -145,6 +169,7 @@
                       "
                       type="text"
                       size="small"
+                      v-hasPermi="['mh:project:user:remove']"
                     >
                       移除
                     </el-button>
@@ -157,7 +182,11 @@
         <el-card class="box-card cardthree" v-else-if="showCard == '3'">
           <div slot="header" class="clearfix">
             <span style="font-size:22px">预计投入工时：{{ manHour }}小时</span>
-            <el-button style="float: right" type="primary" @click="eaitManHour"
+            <el-button
+              style="float: right"
+              type="primary"
+              @click="eaitManHour"
+             
               >编辑</el-button
             >
           </div>
@@ -201,6 +230,7 @@
           <el-input
             type="manHour"
             v-model.number="numberValidateForm.manHour"
+            maxlength="5"
             autocomplete="off"
             style="width:50%"
           ></el-input
@@ -321,11 +351,11 @@ export default {
           console.log(res);
           this.tableData = res.data;
           this.tableData.forEach(el => {
-            if(el.avatar!=''){
+            if (el.avatar != "") {
               el.avatar = "http://192.168.1.21:8080" + el.avatar;
             }
           });
-          console.log(this.tableData)
+          console.log(this.tableData);
           this.peopleTotal = this.tableData.length;
           this.peopleInfo = this.tableData;
           this.peopleTotalInfo = [];

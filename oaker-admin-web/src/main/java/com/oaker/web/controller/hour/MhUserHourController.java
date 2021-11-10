@@ -98,7 +98,7 @@ public class MhUserHourController extends BaseController {
      * 我的统计-详细模式
      */
     @GetMapping("/stat/detail")
-    @PreAuthorize("@ss.hasPermi('mh:hour:stat')")
+    @PreAuthorize("@ss.hasPermi('mh:hour:stat:detail')")
     public AjaxResult queryMyHourStatDetail(
             @NotNull(message = "工时填报id不能为空") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         List<UserHourStatDestailVO> vos = userHourService.queryMyHourStatDetail(date);

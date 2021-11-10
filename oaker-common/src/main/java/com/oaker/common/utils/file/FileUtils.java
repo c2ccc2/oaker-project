@@ -14,10 +14,17 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 /**
  * 文件处理工具类
@@ -216,4 +223,45 @@ public class FileUtils {
         }
         return strFileExtendName;
     }
+
+    @SuppressWarnings("rawtypes")
+    public static List upzipFile(File zipFile, String descDir) {
+        List list = new ArrayList<>();
+        // 防止文件名中有中文时出错
+        System.setProperty("sun.zip.encoding", System.getProperty("sun.jnu.encoding"));
+        if (!zipFile.exists()) {
+            throw new RuntimeException("解压失败，文件 " + zipFile + " 不存在!");
+        }
+        ZipFile zFile = null;
+        InputStream in = null;
+        OutputStream out = null;
+        try {
+            zFile = new ZipFile(zipFile, Charset.forName("GBK"));
+            for (Enumeration entries = zFile.entries(); entries.hasMoreElements(); ) {
+                ZipEntry entry = (ZipEntry) entries.nextElement();
+                File file = new File(descDir + "/" + entry.getName());
+                if (entry.isDirectory()) {
+                    file.mkdirs();
+                } else {
+                    File parent = file.getParentFile();
+                    if (!parent.exists()) {
+                        parent.mkdirs();
+                    }
+                    in = zFile.getInputStream(entry);
+                    out = new FileOutputStream(file);
+                    IOUtils.copy(in, out);
+                    out.flush();
+                    out.close();
+                    in.close();
+                    list.add(file);
+                }
+            }
+            zFile.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
+        }
+        return list;
+    }
+
 }

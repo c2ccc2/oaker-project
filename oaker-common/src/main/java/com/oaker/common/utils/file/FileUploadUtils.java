@@ -52,7 +52,7 @@ public class FileUploadUtils {
      */
     public static final String upload(MultipartFile file) throws IOException {
         try {
-            return upload(getDefaultBaseDir(), file, MimeTypeUtils.DEFAULT_ALLOWED_EXTENSION);
+            return upload(getDefaultBaseDir(), file, MimeTypeUtils.DEFAULT_ALLOWED_EXTENSION, true);
         } catch (Exception e) {
             throw new IOException(e.getMessage(), e);
         }
@@ -68,7 +68,7 @@ public class FileUploadUtils {
      */
     public static final String upload(String baseDir, MultipartFile file) throws IOException {
         try {
-            return upload(baseDir, file, MimeTypeUtils.DEFAULT_ALLOWED_EXTENSION);
+            return upload(baseDir, file, MimeTypeUtils.DEFAULT_ALLOWED_EXTENSION, true);
         } catch (Exception e) {
             throw new IOException(e.getMessage(), e);
         }
@@ -86,7 +86,7 @@ public class FileUploadUtils {
      * @throws IOException                          比如读写文件出错时
      * @throws InvalidExtensionException            文件校验异常
      */
-    public static final String upload(String baseDir, MultipartFile file, String[] allowedExtension)
+    public static final String upload(String baseDir, MultipartFile file, String[] allowedExtension, boolean rename)
             throws FileSizeLimitExceededException, IOException, FileNameLengthLimitExceededException,
             InvalidExtensionException {
         int fileNamelength = file.getOriginalFilename().length();
@@ -96,7 +96,10 @@ public class FileUploadUtils {
 
         assertAllowed(file, allowedExtension);
 
-        String fileName = extractFilename(file);
+        String fileName = file.getOriginalFilename();
+        if(rename) {
+            fileName = extractFilename(file);
+        }
 
         File desc = getAbsoluteFile(baseDir, fileName);
         file.transferTo(desc);
@@ -115,7 +118,7 @@ public class FileUploadUtils {
     }
 
     public static final File getAbsoluteFile(String uploadDir, String fileName) throws IOException {
-        File desc = new File(uploadDir + File.separator + fileName);
+        File desc = new File(uploadDir + "/" + fileName);
 
         if (!desc.exists()) {
             if (!desc.getParentFile().exists()) {
@@ -198,4 +201,20 @@ public class FileUploadUtils {
         }
         return extension;
     }
+
+    /**
+     * 获取文件名去掉后缀扩展名
+     * @param filename
+     * @return
+     */
+    public static String getFileNameNoEx(String filename) {
+        if ((filename != null) && (filename.length() > 0)) {
+            int dot = filename.lastIndexOf('.');
+            if ((dot >-1) && (dot < (filename.length()))) {
+                return filename.substring(0, dot);
+            }
+        }
+        return filename;
+    }
+
 }

@@ -41,7 +41,7 @@ public class ProjectHourController extends BaseController {
     private ProjectHourServiceImpl projectHourService;
 
     @PutMapping("/edit")
-    @PreAuthorize("@ss.hasPermi('system:project:edit')")
+    @PreAuthorize("@ss.hasPermi('system:project:hour:edit')")
     @Log(title = "项目工时管理", businessType = BusinessType.UPDATE)
     public AjaxResult setHour(@NotNull(message = "项目id不能为空") Long projectId
             ,@NotNull(message = "预估工时不能为空") BigDecimal manHour) {
@@ -71,7 +71,7 @@ public class ProjectHourController extends BaseController {
      * @return
      */
     @GetMapping(value = "/stat/fill/detail")
-    @PreAuthorize("@ss.hasPermi('system:project:stat:query')")
+    @PreAuthorize("@ss.hasPermi('system:project:stat:fill:detail')")
     public AjaxResult queryFillDetail(@NotNull(message = "项目id不能为空") Long projectId
             ,@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @NotNull(message = "日期不能为空") LocalDate date){
         ProjectUserFillVO projectUserFillVO = projectHourService.queryFillDetail(projectId, date);

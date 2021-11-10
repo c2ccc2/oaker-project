@@ -33,7 +33,4 @@ target/
 *.classpath
 *.factorypath
 *.settings/
-application-show.yml
-application-test.yml
-application-hdfr.yml
 

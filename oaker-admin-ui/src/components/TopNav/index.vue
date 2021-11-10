@@ -4,16 +4,28 @@
     mode="horizontal"
     @select="handleSelect"
   >
+    <el-menu-item :style="{ '--theme': theme }" index="">
+      <router-link to="/index"
+        ><svg-icon icon-class="dashboard" />首页</router-link
+      ></el-menu-item
+    >
     <template v-for="(item, index) in topMenus">
       <!-- <el-menu-item :style="{'--theme': theme}" :index="item.path" :key="index" v-if="index < visibleNumber" -->
-      <el-menu-item :style="{'--theme': theme}" :index="item.path" :key="index" 
+      <el-menu-item
+        :style="{ '--theme': theme }"
+        :index="item.path"
+        :key="index"
         ><svg-icon :icon-class="item.meta.icon" />
         {{ item.meta.title }}</el-menu-item
       >
     </template>
 
     <!-- 顶部菜单超出数量折叠 -->
-    <el-submenu :style="{'--theme': theme}" index="more" v-if="topMenus.length > visibleNumber">
+    <el-submenu
+      :style="{ '--theme': theme }"
+      index="more"
+      v-if="topMenus.length > visibleNumber"
+    >
       <template slot="title">更多菜单</template>
       <template v-for="(item, index) in topMenus">
         <el-menu-item
@@ -49,13 +61,13 @@ export default {
     // 顶部显示菜单
     topMenus() {
       let topMenus = [];
-      this.routers.map((menu) => {
+      this.routers.map(menu => {
         if (menu.hidden !== true) {
           // 兼容顶部栏一级菜单内部跳转
           if (menu.path === "/") {
-              topMenus.push(menu.children[0]);
+            topMenus.push(menu.children[0]);
           } else {
-              topMenus.push(menu);
+            topMenus.push(menu);
           }
         }
       });
@@ -68,14 +80,16 @@ export default {
     // 设置子路由
     childrenMenus() {
       var childrenMenus = [];
-      this.routers.map((router) => {
+      this.routers.map(router => {
         for (var item in router.children) {
           if (router.children[item].parentPath === undefined) {
-            if(router.path === "/") {
-              router.children[item].path = "/redirect/" + router.children[item].path;
+            if (router.path === "/") {
+              router.children[item].path =
+                "/redirect/" + router.children[item].path;
             } else {
-              if(!this.ishttp(router.children[item].path)) {
-                router.children[item].path = router.path + "/" + router.children[item].path;
+              if (!this.ishttp(router.children[item].path)) {
+                router.children[item].path =
+                  router.path + "/" + router.children[item].path;
               }
             }
             router.children[item].parentPath = router.path;
@@ -101,17 +115,17 @@ export default {
       }
       var routes = this.activeRoutes(activePath);
       if (routes.length === 0) {
-        activePath = this.currentIndex || this.defaultRouter()
+        activePath = this.currentIndex || this.defaultRouter();
         this.activeRoutes(activePath);
       }
       return activePath;
-    },
+    }
   },
   beforeMount() {
-    window.addEventListener('resize', this.setVisibleNumber)
+    window.addEventListener("resize", this.setVisibleNumber);
   },
   beforeDestroy() {
-    window.removeEventListener('resize', this.setVisibleNumber)
+    window.removeEventListener("resize", this.setVisibleNumber);
   },
   mounted() {
     this.setVisibleNumber();
@@ -126,7 +140,7 @@ export default {
     // 默认激活的路由
     defaultRouter() {
       let router;
-      Object.keys(this.routers).some((key) => {
+      Object.keys(this.routers).some(key => {
         if (!this.routers[key].hidden) {
           router = this.routers[key].path;
           return true;
@@ -152,21 +166,21 @@ export default {
     activeRoutes(key) {
       var routes = [];
       if (this.childrenMenus && this.childrenMenus.length > 0) {
-        this.childrenMenus.map((item) => {
+        this.childrenMenus.map(item => {
           if (key == item.parentPath || (key == "index" && "" == item.path)) {
             routes.push(item);
           }
         });
       }
-      if(routes.length > 0) {
+      if (routes.length > 0) {
         this.$store.commit("SET_SIDEBAR_ROUTERS", routes);
       }
       return routes;
     },
-	ishttp(url) {
-      return url.indexOf('http://') !== -1 || url.indexOf('https://') !== -1
+    ishttp(url) {
+      return url.indexOf("http://") !== -1 || url.indexOf("https://") !== -1;
     }
-  },
+  }
 };
 </script>
 
@@ -180,8 +194,9 @@ export default {
   margin: 0 10px !important;
 }
 
-.topmenu-container.el-menu--horizontal > .el-menu-item.is-active, .el-menu--horizontal > .el-submenu.is-active .el-submenu__title {
-  border-bottom: 2px solid #{'var(--theme)'} !important;
+.topmenu-container.el-menu--horizontal > .el-menu-item.is-active,
+.el-menu--horizontal > .el-submenu.is-active .el-submenu__title {
+  border-bottom: 2px solid #{"var(--theme)"} !important;
   color: #303133;
 }
 

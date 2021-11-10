@@ -27,6 +27,11 @@ public class OakerConfig {
      * 版本
      */
     private String version;
+
+    /**
+     * 发布日期
+     */
+    private String date;
     /**
      * 版权年份
      */
@@ -67,6 +72,29 @@ public class OakerConfig {
     }
 
     /**
+     * 获取原型模块基础上传路径
+     */
+    private static String getPrototypePath() {
+        return getProfile() + "/prototype";
+    }
+
+    /**
+     * 获取原型文档上传基础路径
+     * @return
+     */
+    public static String getPrDocPath() {
+        return getPrototypePath() + "/doc";
+    }
+
+    /**
+     * 获取原型文件上传基础路径
+     * @return
+     */
+    public static String getPrPrototypePath() {
+        return getPrototypePath() + "/pr";
+    }
+
+    /**
      * 获取下载路径
      */
     public static String getDownloadPath() {
@@ -90,6 +118,14 @@ public class OakerConfig {
 
     public String getVersion() {
         return version;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public void setVersion(String version) {

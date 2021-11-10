@@ -57,6 +57,10 @@ public class BaseController {
         }
     }
 
+    protected PageDomain getPageDomain() {
+        return TableSupport.buildPageRequest();
+    }
+
     protected Page getPage() {
         PageDomain pageDomain = TableSupport.buildPageRequest();
         Integer pageNum = pageDomain.getPageNum();

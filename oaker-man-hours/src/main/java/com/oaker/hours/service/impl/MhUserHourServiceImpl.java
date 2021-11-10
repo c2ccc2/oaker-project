@@ -1,5 +1,6 @@
 package com.oaker.hours.service.impl;
 
+import com.baomidou.mybatisplus.enums.SqlLike;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.oaker.common.exception.ServiceException;
@@ -334,7 +335,7 @@ public class MhUserHourServiceImpl extends ServiceImpl<MhUserHourMapper, MhUserH
         if (Objects.isNull(firstJoinTime) || endDate.isBefore(DateUtils.date2LocalDate(firstJoinTime))) {
             return Collections.emptyList();
         }
-        if (startDate.isAfter(DateUtils.date2LocalDate(firstJoinTime))) {
+        if (startDate.isBefore(DateUtils.date2LocalDate(firstJoinTime))) {
             startDate = DateUtils.date2LocalDate(firstJoinTime);
         }
         // 查询用户所有缺报记录
@@ -347,12 +348,6 @@ public class MhUserHourServiceImpl extends ServiceImpl<MhUserHourMapper, MhUserH
         for (LocalDate date : dateList) {
             detailVo = new UserHourStatDestailVO();
             detailVo.setDate(date);
-            // 如果是节假日不需要填报
-            if (FestivalsUtil.isAHoliday(localDate.toString())) {
-                detailVo.setStatus(UserHourListVO.StatusEnum.NO_NEED.getStatus());
-                resultList.add(detailVo);
-                continue;
-            }
             // 如果存在缺报记录
             if (missDates.contains(date)) {
                 detailVo.setStatus(UserHourListVO.StatusEnum.NOT_FILLED.getStatus());
@@ -373,6 +368,12 @@ public class MhUserHourServiceImpl extends ServiceImpl<MhUserHourMapper, MhUserH
                     detailVo.setProjectHours(projectHours);
                 }
                 detailVo.setStatus(UserHourListVO.StatusEnum.FILLED.getStatus());
+                resultList.add(detailVo);
+                continue;
+            }
+            // 如果是节假日不需要填报
+            if (FestivalsUtil.isAHoliday(date.toString())) {
+                detailVo.setStatus(UserHourListVO.StatusEnum.NO_NEED.getStatus());
                 resultList.add(detailVo);
                 continue;
             }
@@ -415,7 +416,7 @@ public class MhUserHourServiceImpl extends ServiceImpl<MhUserHourMapper, MhUserH
         EntityWrapper<MhHourDetail> wrapper = new EntityWrapper<>();
         wrapper.eq(Columns.MhHourDetail.projectId, projectId);
         if (StringUtils.isNotBlank(yearMonth)) {
-            wrapper.like(false, Columns.MhHourDetail.fillDate, yearMonth + "%");
+            wrapper.like(Columns.MhHourDetail.fillDate, yearMonth, SqlLike.RIGHT);
         }
         return hourDetailService.selectList(wrapper);
     }

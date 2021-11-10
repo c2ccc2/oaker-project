@@ -18,7 +18,7 @@
             :picker-options="pickerOptions"
           >
           </el-date-picker>
-          <el-row>
+          <el-row style="margin-left:20px">
             <el-button type="primary" @click="init">查询</el-button>
             <el-button type="primary" @click="getdatetaday">今日</el-button>
             <el-button type="primary" @click="getyesterday">上一日</el-button>
@@ -60,6 +60,8 @@
                 <template slot-scope="scope">
                   <p>{{ scope.row.useHour }}小时</p>
                 </template>
+              </el-table-column>
+              <el-table-column prop="createTime" label="更新时间">
               </el-table-column>
               <el-table-column prop="createTime" label="上报时间">
               </el-table-column>
@@ -243,10 +245,10 @@ export default {
   font-weight: 600;
 }
 .selectBtn {
-  width: 30%;
+  // width: 50%;
   line-height: 56px;
   display: flex;
-  justify-content: space-between;
+  // justify-content: space-between;
 }
 .titleInfo {
   width: 100%;

@@ -18,7 +18,7 @@
               ><div class="grid-content bg-purple">
                 <el-card class="box-card" shadow="hover">
                   <div slot="header" class="clearfix">
-                    <b style="font-size:20px">{{ item.projectName }}</b>
+                    <b style="font-size:16px">{{ item.projectName }}</b>
                     <el-tag
                       v-if="item.cardStatus"
                       style="float: right;"
@@ -53,7 +53,7 @@
                       </div>
                       <div class="bottom">
                         <p>总投入：</p>
-                        <p style="width:100%;font-weight:600;font-size:16px;">
+                        <p style="width:100%;font-weight:600;font-size:14px;">
                           {{ item.useHour }}小时({{
                             (item.useHour / 8).toFixed(2)
                           }}人天)
@@ -203,7 +203,7 @@
                 <span style="font-weight:600">最新动态</span>
               </div>
               <div class="text item">
-                <el-table :data="IndexLoginUserInfo" style="width: 100%">
+                <el-table :data="IndexLoginUserInfo" style="width: 100%;font-size:12px">
                   <el-table-column prop="loginDate" label="日期" align="center">
                   </el-table-column>
                   <el-table-column prop="nickName" label="姓名" align="center">
@@ -235,8 +235,8 @@ export default {
     return {
       // 版本号
       version: "3.6.0",
-      usertime: "上午好",
-      username: "段铭锟",
+      usertime: "",
+      username: "",
       cardStatus: true,
       queryParams: {
         pageNum: 1,
@@ -254,6 +254,7 @@ export default {
     };
   },
   created() {
+    console.log("creatd");
     this.getUser();
     this.init();
   },
@@ -278,7 +279,7 @@ export default {
     },
     init() {
       getIndexProjectStat().then(res => {
-        console.log(res);
+        // console.log(res);
         if (res.code == 200) {
           this.peojectcardInfo = res.data;
           this.peojectcardInfo.forEach(el => {
@@ -311,7 +312,7 @@ export default {
         }
       });
       getIndexLoginUser(this.queryParams).then(res => {
-        console.log("getIndexLoginUser", res);
+        // console.log("getIndexLoginUser", res);
         if (res.code == 200) {
           this.IndexLoginUserInfo = res.rows;
           console.log(" this.IndexLoginUserInfo", this.IndexLoginUserInfo);
@@ -319,11 +320,11 @@ export default {
       });
     },
     submitWorkingHours() {
-      console.log("提交工时");
+      // console.log("提交工时");
       this.$router.push({ path: "/workingHours/myWorkingHours" });
     },
     checkWorkingHours() {
-      console.log("查看工时");
+      // console.log("查看工时");
       this.$router.push({ path: "/workingHours/myStatistics" });
     },
     goTarget(href) {

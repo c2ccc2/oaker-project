@@ -20,7 +20,7 @@ public interface ProjectUserMapper extends BaseMapper<ProjectUser> {
 
     @Select("SELECT pu.project_id AS projectId, p.project_name AS projectName, p.project_status AS projectStatus" +
             " FROM sys_project_user AS pu LEFT JOIN sys_project AS p ON pu.project_id = p.project_id " +
-            " WHERE pu.user_id = #{userId} AND pu.create_time < #{date} AND pu.status = 1")
+            " WHERE pu.user_id = #{userId} AND pu.create_time < #{date} AND pu.status = 1 AND p.deleted = 0")
     List<UserProjectShortVO> queryUserProject(@Param("userId") Long userId, @Param("date") Date date);
 
     @Select("SELECT user_id FROM sys_project_user WHERE status = 1")

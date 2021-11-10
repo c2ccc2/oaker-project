@@ -51,6 +51,11 @@
             <artifactId>oaker-man-hours</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.oak</groupId>
+            <artifactId>oaker-prototype</artifactId>
+        </dependency>
+
         <!-- 定时任务-->
         <dependency>
             <groupId>com.oak</groupId>
