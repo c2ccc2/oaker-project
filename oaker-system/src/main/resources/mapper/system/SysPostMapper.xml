@@ -71,7 +71,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<include refid="selectPostVo"/>
 		 where post_code=#{postCode} limit 1
 	</select>
-	
+
+	<select id="countPost" resultType="java.lang.Integer">
+		SELECT
+		COUNT(post_id)
+		FROM sys_post
+		WHERE status = 0
+		<if test="postName != null and postName != ''">
+			AND post_name LIKE concat('%', #{postName}, '%')
+		</if>
+	</select>
+
 	<update id="updatePost" parameterType="SysPost">
  		update sys_post
  		<set>

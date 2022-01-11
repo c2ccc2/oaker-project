@@ -15,4 +15,8 @@ public interface PrPrototypeMapper extends BaseMapper<PrPrototype> {
 
     @Update("UPDATE pr_prototype SET record_id=null WHERE id=#{id} AND record_id=#{recordId}")
     Integer deleteRecord(@Param("id") Long id, @Param("recordId") Long recordId);
+
+    @Update("UPDATE pr_prototype SET sketch_id=null WHERE id=#{id} AND sketch_id=#{sketchId}")
+    Integer deleteSketch(@Param("id") Long id, @Param("sketchId") Long sketchId);
+
 }

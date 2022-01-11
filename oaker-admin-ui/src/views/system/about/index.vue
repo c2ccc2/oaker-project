@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <h1>系统名称: "{{ loginVersion.系统名称 }}"</h1>
+    <!-- <h1>系统名称: "{{ loginVersion.系统名称 }}"</h1> -->
     <h1>version: "{{ loginVersion.version }}"</h1>
   </div>
 </template>
@@ -20,10 +20,10 @@ export default {
   methods: {
     init() {
       loginversion().then(res => {
-        console.log(res);
+       // console.log(res);
         this.loginVersion = res;
-        console.log(this.loginVersion);
-        console.log(this.loginVersion.date);
+       // console.log(this.loginVersion);
+       // console.log(this.loginVersion.date);
       });
     }
   }

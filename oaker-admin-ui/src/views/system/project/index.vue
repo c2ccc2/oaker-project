@@ -92,7 +92,7 @@
                   <el-tag
                     type="success"
                     v-else-if="scope.row.projectStatus == 'c'"
-                    >已归档</el-tag
+                    >已结束</el-tag
                   >
                   <el-tag
                     type="info"
@@ -186,8 +186,8 @@ export default {
     setdata() {
       var time = new Date();
       var ji = new Date(time).getDay();
-      console.log(time);
-      console.log("ji", ji);
+      // console.log(time);
+      // console.log("ji", ji);
     },
     // 获取本周，上周，本月，上月的起止日期
     getdata() {
@@ -247,10 +247,10 @@ export default {
       //获得本周的开始日期
       function getWeekStartDate() {
         var weekStartDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeek);
-        console.log("weekStartDate", weekStartDate);
+        // console.log("weekStartDate", weekStartDate);
         return formatDate(weekStartDate);
       }
-      console.log(getWeekStartDate());
+      // console.log(getWeekStartDate());
 
       //获得本周的结束日期
       function getWeekEndDate() {
@@ -261,7 +261,7 @@ export default {
         );
         return formatDate(weekEndDate);
       }
-      console.log(getWeekEndDate());
+      // console.log(getWeekEndDate());
 
       //获得本月的开始日期
       function getMonthStartDate() {
@@ -345,7 +345,7 @@ export default {
 
     init() {
       getDicttype("mh_project_status").then(res => {
-        console.log(res);
+        // console.log(res);
         if (res.code == 200) {
           this.statusBtns = res.data;
           this.statusBtns.forEach(el => {
@@ -367,7 +367,7 @@ export default {
       });
       listProject(this.addDateRange(this.queryParams, this.dateRange)).then(
         res => {
-          console.log(res);
+          // console.log(res);
           if (res.code == 200) {
             // this.$message.success(res.msg);
             this.total = res.total;
@@ -383,9 +383,9 @@ export default {
       this.init();
     },
     lookSearch(dictValue) {
-      console.log(dictValue);
+      // console.log(dictValue);
       getProjectStatus(dictValue).then(res => {
-        console.log(res);
+        // console.log(res);
         if (res.code == 200) {
           // this.$message.success(res.msg);
           this.total = res.total;
@@ -399,19 +399,22 @@ export default {
       this.init();
     },
     newProject() {
-      console.log("创建项目");
+      // console.log("创建项目");
       this.$refs.addform.open();
     },
     handleClick(row) {
-      console.log(row.projectId);
+      // console.log(row.projectId);
       let projectId = row.projectId;
-      this.$router.push({ path: "/system/project-Set/projectSettings", query: { projectId } }); 
+      this.$router.push({
+        path: "/mange/project-set/projectSettings",
+        query: { projectId }
+      });
     },
 
     handlearchive(row) {
-      console.log(row);
+      // console.log(row);
       updaProjectStatus(row.projectId, "c").then(res => {
-        console.log(res);
+        // console.log(res);
         if (res.code == 200) {
           this.init();
         }
@@ -420,7 +423,7 @@ export default {
     handleDelete(id) {
       // console.log(id);
       delProject(id).then(res => {
-        console.log(res);
+        // console.log(res);
         if (res.code) {
           this.$message.success("删除成功");
           this.init();

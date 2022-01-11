@@ -27,18 +27,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/doc/system/project")
 public class SysProjectApi {
 
-    /**
-     * 新增项目
-     */
     @PostMapping("/create")
     @ApiOperation("新增项目")
     public AjaxResult add(@RequestBody ProjectSaveDTO sysProject) {
         return AjaxResult.success();
     }
 
-    /**
-     * 查询项目列表
-     */
     @GetMapping("/list")
     @ApiOperation("查询项目列表")
     @ApiImplicitParam(name = "projectStatus", value = "项目状态", dataType = "String")
@@ -47,9 +41,6 @@ public class SysProjectApi {
         return vo;
     }
 
-    /**
-     * 项目经理查询项目列表
-     */
     @GetMapping("/list/manager")
     @ApiOperation("项目经理查询项目列表")
     @ApiImplicitParam(name = "projectStatus", value = "项目状态", dataType = "String")
@@ -58,9 +49,6 @@ public class SysProjectApi {
         return vo;
     }
 
-    /**
-     * 查询项目列表
-     */
     @GetMapping("/{projectId}")
     @ApiOperation("查询项目详情")
     @ApiImplicitParam(name = "projectId", value = "项目id", dataType = "Long", paramType = "path")
@@ -69,18 +57,12 @@ public class SysProjectApi {
         return vo;
     }
 
-    /**
-     * 修改项目信息
-     */
     @PutMapping("/modify")
     @ApiOperation("项目概要编辑")
     public AjaxResult modify(@RequestBody ProjectUpdateDTO projectUpdateDTO) {
         return AjaxResult.success();
     }
 
-    /**
-     * 删除项目信息
-     */
     @DeleteMapping("/remove")
     @ApiOperation("删除项目")
     @ApiImplicitParam(name = "projectId", value = "项目id", dataType = "Long", required = true)
@@ -89,9 +71,6 @@ public class SysProjectApi {
     }
 
 
-    /**
-     * 修改项目状态
-     */
     @PutMapping("/status")
     @ApiOperation("设置项目状态")
     @ApiImplicitParams({
@@ -99,6 +78,16 @@ public class SysProjectApi {
             @ApiImplicitParam(name = "projectStatus", value = "项目状态", dataType = "String", required = true)
     })
     public AjaxResult setStatus(Long projectId, String projectStatus) {
+        return AjaxResult.success();
+    }
+
+    @PutMapping("/enable")
+    @ApiOperation("设置项目 暂停/启用 状态")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "projectId", value = "项目id", dataType = "Long", required = true),
+            @ApiImplicitParam(name = "enable", value = "项目状态", dataType = "Boolean", required = true)
+    })
+    public AjaxResult enable(Long projectId, Boolean enable) {
         return AjaxResult.success();
     }
 

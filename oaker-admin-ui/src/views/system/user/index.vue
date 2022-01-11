@@ -171,7 +171,7 @@
               size="mini"
               :loading="exportLoading"
               @click="handleExport"
-              :disabled="true"
+              
               v-hasPermi="['system:user:export']"
               >导出</el-button
             >
@@ -683,7 +683,7 @@ export default {
         ],
         postIds: [{ required: true, message: "岗位不能为空", trigger: "blur" }],
         roleIds: [{ required: true, message: "角色不能为空", trigger: "blur" }],
-        deptId: [{ required: true, message: "角色不能为空", trigger: "blur" }]
+        deptId: [{ required: true, message: "归属部门不能为空", trigger: "blur" }]
       }
     };
   },
@@ -711,7 +711,7 @@ export default {
     getList() {
       this.loading = true;
       listUser().then(res => {
-        console.log("userlist", res);
+        // console.log("userlist", res);
         //peopleTotalInfo
         this.peopleTotalInfo = [];
         res.rows.forEach(el => {
@@ -723,7 +723,7 @@ export default {
           });
           this.peopleTotalInfo.push(data);
         });
-        console.log(this.peopleTotalInfo);
+        // console.log(this.peopleTotalInfo);
         // let temp=JSON.stringify( this.peopleTotalInfo)
         // let tempdata=JSON.parse(temp)
         // console.log(tempdata)
@@ -746,7 +746,7 @@ export default {
         // }
         // this.peopleTotalInfo=tempdata
 
-        console.log("this.peopleTotalInfo.length", this.peopleTotalInfo.length);
+        // console.log("this.peopleTotalInfo.length", this.peopleTotalInfo.length);
         // for (let i = 0; i < this.peopleTotalInfo.length; i++) {
         //   let tempname = this.peopleTotalInfo[i].postName;
         //   // console.log(tempname);
@@ -769,9 +769,9 @@ export default {
         // }
         // this.setarray(this.peopleTotalInfo)
         // this.peopleTotalInfo.splice(-1,1)
-        console.log("unique", this.unique(this.peopleTotalInfo));
+        // console.log("unique", this.unique(this.peopleTotalInfo));
         this.peopleTotalInfo = this.unique(this.peopleTotalInfo);
-        console.log("peopleTotalInfo", this.peopleTotalInfo);
+        // console.log("peopleTotalInfo", this.peopleTotalInfo);
 
         //peopleTotalInfo
       });
@@ -1055,7 +1055,7 @@ export default {
     },
     accountInput(val) {
       //账号的实时输入
-      console.log(val);
+      // console.log(val);
       let codeReg = new RegExp("[A-Za-z0-9]+"), //正则 英文+数字；
         len = val.length,
         str = "";

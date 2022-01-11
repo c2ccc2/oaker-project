@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <el-card class="box-card">
+    <el-card class="box-card" shadow="never">
       <div slot="header" class="clearfix">
         <span
           ><el-date-picker
@@ -24,7 +24,7 @@
         >
       </div>
       <div class="text item">
-        <el-descriptions title="统计" :column="4">
+        <el-descriptions title="统计" :column="5">
           <el-descriptions-item label="上报天数"
             >{{ stat.fillNum }}天</el-descriptions-item
           >
@@ -33,6 +33,9 @@
           >
           <el-descriptions-item label="缺报"
             >{{ stat.missFillNum }}天</el-descriptions-item
+          >
+          <el-descriptions-item label="请假"
+            >{{ stat.leaveNum }}天</el-descriptions-item
           >
           <el-descriptions-item label="总计"
             >{{ (stat.totalHour / 8).toFixed(2) }}人天（{{
@@ -83,6 +86,12 @@
               :show-header="false"
             >
               <el-table-column
+              type="index"
+                label="序号"
+                align="center"
+              >
+              </el-table-column>
+              <el-table-column
                 prop="projectName"
                 label="项目名字"
                 align="center"
@@ -97,27 +106,43 @@
             </el-table>
           </template>
         </div>
-        <div v-show="showEvemts" class="detail" v-loading="showEvents">
+        <div class="detail" v-else>
           <template>
-            <vue-event-calendar
+            <!-- <vue-event-calendar
               :events="demoEvents"
               @monthChanged=""
               @dayChanged=""
-            ></vue-event-calendar>
+            ></vue-event-calendar> -->
             <!-- <el-table :data="detailInfo" style="width: 100%"> -->
-            <!-- <el-table :data="demoEvents" style="width: 100%">
-               <el-table-column type="index" label="序号" width="180">
+            <el-table :data="detailInfo">
+              <el-table-column type="index" label="序号" width="60">
               </el-table-column>
-              <el-table-column prop="date" label="日期" width="180">
+              <el-table-column prop="fillDate" label="日期" width="180">
               </el-table-column>
-              <el-table-column prop="name" label="人员" width="180">
+              <el-table-column prop="nickName" label="人员" width="120">
               </el-table-column>
-              <el-table-column prop="address" label="岗位"> </el-table-column>
-              <el-table-column prop="title" label="项目"> </el-table-column>
-              <el-table-column prop="address" label="项目所属工作组"> </el-table-column>
-              <el-table-column prop="useHour" label="工时"> </el-table-column>
-              <el-table-column prop="address" label="提交时间"> </el-table-column>
-            </el-table> -->
+              <el-table-column prop="postName" label="岗位"> </el-table-column>
+              <el-table-column prop="projectName" label="项目">
+              </el-table-column>
+              <el-table-column prop="everyday" label="项目所属工作组">
+                 <template slot-scope="scope">
+                    <div class="">
+                      <el-tag v-if="scope.row.everyday">每日上报</el-tag>
+                      <el-tag v-else type="success">临时上报</el-tag>
+                    </div>
+                  </template>
+              </el-table-column>
+              <el-table-column prop="useHour" label="工时" width="60"> </el-table-column>
+              <el-table-column prop="createTime" label="提交时间">
+              </el-table-column>
+            </el-table>
+            <pagination
+              v-show="total > 0"
+              :total="total"
+              :page.sync="queryParams.pageNum"
+              :limit.sync="queryParams.pageSize"
+              @pagination="init"
+            />
           </template>
           <!-- <template>
             <vue-event-calendar :events="demoEvents">
@@ -152,7 +177,12 @@ export default {
       Calendar: new Date(),
       detailInfo: [],
       demoEvents: [],
-      showEvemts: false
+      showEvemts: false,
+      total:0,
+      queryParams: {
+        pageNum: 1,
+        pageSize: 10
+      }
     };
   },
   created() {
@@ -170,6 +200,7 @@ export default {
     },
     init() {
       // console.log("time", this.Calendar);
+      this.getHourDetail();
       let date = this.datetayMonth;
       getHourStat(date).then(res => {
         // console.log(res);
@@ -182,32 +213,33 @@ export default {
       });
     },
     getHourDetail() {
-      let date = this.datetayMonth;
-      getHourStatDetail(date).then(res => {
+      this.queryParams.date = this.datetayMonth;
+      getHourStatDetail(this.queryParams).then(res => {
         // console.log(res);
         if (res.code == 200) {
-          this.detailInfo = res.data;
-          let detailArr = [];
-          this.detailInfo.forEach(el => {
-            let date = el.date.replace(/-/g, "/");
-            if (el.projectHours != null) {
-              el.projectHours.forEach(dl => {
-                let title = dl.projectName;
-                let desc = "本项目所用工时：" + dl.useHour + "小时";
-                let useHour=dl.useHour
-                let data = {
-                  date,
-                  title,
-                  desc,
-                  useHour
-                };
-                detailArr.push(data);
-              });
-              // let title = el.projectHours.projectName;
-              // let desc = "本项目所用工时：" + el.projectHours.useHour + "小时";
-            }
-          });
-          this.demoEvents = detailArr;
+          this.detailInfo = res.rows;
+          this.total=res.total
+          // let detailArr = [];
+          // this.detailInfo.forEach(el => {
+          //   let date = el.date.replace(/-/g, "/");
+          //   if (el.projectHours != null) {
+          //     el.projectHours.forEach(dl => {
+          //       let title = dl.projectName;
+          //       let desc = "本项目所用工时：" + dl.useHour + "小时";
+          //       let useHour = dl.useHour;
+          //       let data = {
+          //         date,
+          //         title,
+          //         desc,
+          //         useHour
+          //       };
+          //       detailArr.push(data);
+          //     });
+          //     // let title = el.projectHours.projectName;
+          //     // let desc = "本项目所用工时：" + el.projectHours.useHour + "小时";
+          //   }
+          // });
+          // this.demoEvents = detailArr;
           // console.log(detailArr);
         }
       });
@@ -229,14 +261,17 @@ export default {
     },
     getMonth() {
       // this.init()
-      let todate = this.dataMonth.replace(/-/g, "/");
-      // console.log(todate);
-      this.$EventCalendar.toDate(todate);
-      // console.log("查阅月", this.dataMonth);
-      let date = this.dataMonth;
-      // console.log(date);
+      // console.log(this.dataMonth);
+      if (this.dataMonth) {
+        // console.log("有");
+        let todate = this.dataMonth.replace(/-/g, "/");
+        this.$EventCalendar.toDate(todate);
+      } else {
+        // console.log("没有");
+        alert("已显示当前月");
+      }
+      // let date = this.dataMonth;
       this.init();
-      // console.log(time);
     },
     showstreamline() {
       this.showStreamline = true;

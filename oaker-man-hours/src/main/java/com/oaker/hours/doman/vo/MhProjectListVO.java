@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -32,6 +33,9 @@ public class MhProjectListVO {
     @ApiModelProperty("项目经理id")
     private Long projectManager;
 
+    @ApiModelProperty("项目状态 1 启用   0暂停")
+    private Boolean enable;
+
     @ApiModelProperty("项目经理名称")
     private String projectManagerName;
 
@@ -49,6 +53,12 @@ public class MhProjectListVO {
 
     @ApiModelProperty("是否删除")
     private Boolean deleted;
+
+    @ApiModelProperty("开始日期")
+    private LocalDate startDate;
+
+    @ApiModelProperty("结束日期")
+    private LocalDate endDate;
 
     @ApiModelProperty("创建者")
     private String createBy;

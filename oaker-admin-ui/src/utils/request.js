@@ -27,12 +27,14 @@ service.interceptors.request.use(config => {
   if (getToken() && !isToken) {
     config.headers['Authorization'] = 'Bearer ' + getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
   }
-  if ((config.method === 'post'||"put") && config.type === 'form') {
+  if ((config.method === 'post' || "put") && config.type === 'form') {
     // console.log('config', config)
     // config.data=JSON.parse(config.data)
     config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
     config.data = qs.stringify(config.data)
   }
+  // console.log('打印参数', config)
+
   // get请求映射params参数
   if (config.method === 'get' && config.params) {
     let url = config.url + '?';

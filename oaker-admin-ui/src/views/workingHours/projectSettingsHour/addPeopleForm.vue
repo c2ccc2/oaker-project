@@ -7,76 +7,7 @@
       @close="beforeClose"
       center
     >
-      <template>
-        <!-- <p style="text-align: center; margin: 0 0 20px">
-          使用 render-content 自定义数据项
-        </p> -->
-        <!-- <div style="text-align: center">
-          <el-transfer
-            style="text-align: left; display: inline-block"
-            v-model="value"
-            filterable
-            :left-default-checked="[2, 3]"
-            :right-default-checked="[1]"
-            :render-content="renderFunc"
-            :titles="['Source', 'Target']"
-            :button-texts="['到左边', '到右边']"
-            :format="{
-              noChecked: '${total}',
-              hasChecked: '${checked}/${total}'
-            }"
-            @change="handleChange"
-            :data="data"
-          >
-            <el-button class="transfer-footer" slot="left-footer" size="small"
-              >操作</el-button
-            >
-            <el-button class="transfer-footer" slot="right-footer" size="small"
-              >操作</el-button
-            >
-          </el-transfer>
-        </div> -->
-        <!-- <p style="text-align: center; margin: 50px 0 20px">
-          使用 scoped-slot 自定义数据项
-        </p> -->
-        <!-- <div style="text-align: center">
-          <el-transfer
-            style="text-align: left; display: inline-block"
-            v-model="value4"
-            filterabl
-            :titles="['所有', '已选']"
-            :format="{
-              noChecked: '${total}',
-              hasChecked: '${checked}/${total}'
-            }"
-            @change="handleChange"
-            :data="data"
-          >
-            <span slot-scope="{ option }"
-              >{{ option.key }} - {{ option.label }}</span
-            >
-            <el-button class="transfer-footer" slot="left-footer" size="small"
-              >操作</el-button
-            >
-            <el-button class="transfer-footer" slot="right-footer" size="small"
-              >操作</el-button
-            >
-          </el-transfer>
-        </div> -->
-        <!-- <el-transfer
-          v-model="checked"
-          :data="transferData"
-          filterable
-          :filter-method="filterMethod"
-          filter-placeholder="请输入姓名查询"
-          :titles="['全选', '全选']"
-          @change="getObject"
-        >
-          <span slot-scope="{ option }"
-            >{{ option.nickName }} - {{ option.postName }}
-            <span> - {{ option.email }}</span>
-          </span>
-        </el-transfer> -->
+      <!-- <template>
         <el-transfer
           v-model="checked"
           :data="transferData"
@@ -90,12 +21,57 @@
             >{{ option.nickName }} - {{ option.postName }}
             <span> - {{ option.email }}</span>
           </span>
-           <!-- <span slot-scope="{ option }"
-            ><p>{{ option.nickName }} - {{ option.postName }}</p>
-            <p>{{ option.email }}</p>
-          </span> -->
         </el-transfer>
         
+      </template> -->
+       <template>
+        <el-table
+          :data="
+            transferData.filter(
+              data =>
+                !search ||
+                data.nickName.toLowerCase().includes(search.toLowerCase())
+            )
+          "
+          style="width: 100%"
+          @selection-change="handleSelectionChange"
+        >
+          <el-table-column type="index" label="序号" prop="nickName">
+          </el-table-column>
+          <el-table-column label="姓名" prop="nickName">
+            <template slot-scope="scope">
+              <div>
+                <p>{{ scope.row.nickName }}</p>
+                <p>{{ scope.row.email }}</p>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column prop="postName"
+            ><template slot="header">
+              <el-input
+                v-model="search"
+                size="mini"
+                clearable
+                placeholder="输入姓名搜索"
+              />
+            </template>
+          </el-table-column>
+          <el-table-column type="selection" align="center">
+            <!-- <template slot-scope="scope">
+              <el-button
+                size="mini"
+                @click="handleEdit(scope.$index, scope.row)"
+                >Edit</el-button
+              >
+              <el-button
+                size="mini"
+                type="danger"
+                @click="handleDelete(scope.$index, scope.row)"
+                >Delete</el-button
+              >
+            </template> -->
+          </el-table-column>
+        </el-table>
       </template>
       <span slot="footer" class="dialog-footer">
         <el-button  @click="handleclose">取 消</el-button>
@@ -127,6 +103,8 @@ export default {
       projectId: "",
       // data: generateData(),
       transferData: [],
+      search: "",
+      multipleSelection:[],
       checked: [],
       renderFunc(h, option) {
         return (
@@ -145,30 +123,23 @@ export default {
   },
   methods: {
     clickspan(row){
-      console.log(row)
-      let flag=this.checked.findIndex(el=>el==row.key)
-      console.log(flag)
-      if(flag>=0){
-        this.checked.splice(flag,1)
-        // this.transferData.unshift(row)
-        console.log(row)
-      }else{
-        this.checked.push(row.key)
-      }
+      let selectData=[]
+      row.forEach(el=>selectData.push(el.key))
+      return selectData;
     },
     open() {
-      console.log(this.data);
+     // console.log(this.data);
       setTimeout(() => {
-        console.log("addform", this.projectId);
+       // console.log("addform", this.projectId);
         this.settransfer()
         this.getObject()
         this.centerDialogVisible = true;
       }, 100);
     },
     getObject() {
-      console.log("1111");
+     // console.log("1111");
       userSelectList(this.projectId).then(res => {
-        console.log(res);
+       // console.log(res);
         if(res.code==200){
           const allData = res.data
           const data = []
@@ -195,16 +166,16 @@ export default {
         transfer.style.justifyContent="center"
         transfer.style.alignItems="center"
         transferPanel.forEach(el=>el.style.width="38%")
-        console.log(transferPanel)
+       // console.log(transferPanel)
       }, 100);
     },
     handleChange(value, direction, movedKeys) {
-      console.log(value, direction, movedKeys);
+     // console.log(value, direction, movedKeys);
     },
     beforeClose() {
       this.checked = [];
 
-      // console.log('close',111)
+     // console.log('close',111)
       // this.$confirm("是否关闭？", "提示！", {
       //   confirmButtonText: "确定",
       //   cancelButtonText: "取消",
@@ -219,24 +190,30 @@ export default {
     },
     handleclose() {
       this.centerDialogVisible = false;
-      this.checked = [];
+      this.multipleSelection = [];
     },
     handleclick(){
-      console.log(111)
-      console.log(this.checked)
+     // console.log(111)
+     // console.log(this.multipleSelection)
       let data={
         projectId:this.projectId,
-        users:this.checked
+        users:this.multipleSelection
       }
       addProjectUsers(data).then(res=>{
-        console.log(res)
+       // console.log(res)
         if(res.code==200){
           this.$parent.init()
           this.$parent.showCard = 2;
-          this.checked = [];
+          this.multipleSelection = [];
           this.centerDialogVisible=false
         }
       })
+    },
+     handleSelectionChange(val) {
+     // console.log(val)
+      this.multipleSelection = this.clickspan(val);
+     // console.log(this.multipleSelection)
+
     }
   }
 };

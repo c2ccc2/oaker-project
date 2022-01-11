@@ -4,17 +4,18 @@
     mode="horizontal"
     @select="handleSelect"
   >
-    <el-menu-item :style="{ '--theme': theme }" index="">
+    <!-- <el-menu-item :style="{ '--theme': theme }" index="">
       <router-link to="/index"
         ><svg-icon icon-class="dashboard" />首页</router-link
       ></el-menu-item
-    >
+    > -->
     <template v-for="(item, index) in topMenus">
       <!-- <el-menu-item :style="{'--theme': theme}" :index="item.path" :key="index" v-if="index < visibleNumber" -->
       <el-menu-item
         :style="{ '--theme': theme }"
         :index="item.path"
         :key="index"
+        v-if="index < visibleNumber"
         ><svg-icon :icon-class="item.meta.icon" />
         {{ item.meta.title }}</el-menu-item
       >
@@ -47,7 +48,7 @@ export default {
   data() {
     return {
       // 顶部栏初始数
-      visibleNumber: 5,
+      visibleNumber: 7,
       // 是否为首次加载
       isFrist: false,
       // 当前激活菜单的 index
@@ -134,8 +135,8 @@ export default {
     // 根据宽度计算设置显示栏数
     setVisibleNumber() {
       const width = document.body.getBoundingClientRect().width / 3;
-      this.visibleNumber = parseInt(width / 65);
-      // console.log(width,this.visibleNumber)
+      // this.visibleNumber = parseInt(width / 84);
+      // console.log(width*3,this.visibleNumber)
     },
     // 默认激活的路由
     defaultRouter() {

@@ -1,14 +1,20 @@
 <template>
   <div class="main">
-    <div class="infoOne">
-      <el-card class="box-card">
-        <div slot="header" class="clearfix">
-          <span>查看工时详情</span>
-          <div style="float: right; padding: 3px 0" type="text">
-            {{ $route.query.fillDate }}
+    <el-dialog
+      title="工时详情"
+      :visible.sync="centerDialogVisible"
+      width="46%"
+      @close="beforeClose"
+    >
+      <div class="infoOne">
+        <el-card class="box-card" shadow="never">
+          <div slot="header" class="clearfix">
+            <span>查看工时详情</span>
+            <div style="float: right; padding: 3px 0" type="text">
+              {{ fillDate }}
+            </div>
           </div>
-        </div>
-        <!-- <div
+          <!-- <div
           v-for="(item, index) in projectList"
           :key="index"
           class="text item comeTo"
@@ -27,35 +33,61 @@
             {{ "小时" }}
           </span>
         </div> -->
-        <el-form :inline="false" label-width="120px">
-          <el-form-item
-            v-for="(item, index) in projectList"
-            :key="index"
-            :label="item.projectName"
-            prop="item.projectName"
-          >
-            <el-input
-              v-model.number="item.useHour"
-              max="8"
-              maxlength="1"
-              placeholder="工时"
-              style="width:60%"
-              @input="lookinput(item.hour)"
-            ></el-input
-            >小时
-          </el-form-item>
-          <el-form-item label="总计">
-            <el-input
-              v-model.number="useHourTotal"
-              :max="8"
-              autocomplete="off"
-              :disabled="true"
-              style="width:60%"
-            ></el-input
-            >小时
-          </el-form-item>
-        </el-form>
-        <!-- <div class="text comeTo item">
+          <el-form :inline="false" label-width="120px">
+            <el-form-item
+              v-for="(item, index) in projectList"
+              :key="index"
+              :label="item.projectName"
+              prop="item.projectName"
+            >
+              <div
+                style="display: flex;
+    justify-content: flex-end;"
+              >
+                <el-input
+                  v-model.number="item.useHour"
+                  type="number"
+                  :max="24"
+                  maxlength="2"
+                  placeholder="工时"
+                  style="width:20%"
+                  @input="lookinput(item.useHour)"
+                ></el-input
+                ><span style="margin:0 10px">小时</span>
+              </div>
+              <hr />
+              <el-input
+                style="margin-top:5px;width:100%"
+                v-model="item.daily"
+                type="textarea"
+                :rows="2"
+                maxlength="200"
+                show-word-limit
+                :autosize="{ minRows: 2, maxRows: 3 }"
+                placeholder="请填写日志"
+              >
+              </el-input>
+            </el-form-item>
+            <el-form-item label="总计">
+              <div
+                style="display: flex;
+    justify-content: flex-end;"
+              >
+                <el-input
+                  v-model.number="useHourTotal"
+                  :max="24"
+                  autocomplete="off"
+                  :disabled="true"
+                  style="width:20%"
+                ></el-input
+                ><span style="margin:0 10px">小时</span>
+              </div>
+            </el-form-item>
+            <el-form-item label="提示:">
+              <p class="tips">{{ submitTips }}</p>
+            </el-form-item>
+          </el-form>
+          <!-- <div class="text comeTo item">
           <span class="tableOne">
             总计
           </span>
@@ -71,95 +103,126 @@
             {{ "小时" }}
           </span>
         </div> -->
-        <div class="footer-btn item">
-          <el-button round @click="handleCannel">返回</el-button>
-          <el-button type="primary" round @click="handleDetailHour"
-            >修改</el-button
-          >
-        </div>
-      </el-card>
-    </div>
-    <div class="infoTwo"></div>
+          <div class="footer-btn item">
+            <el-button round @click="handleCannel">返回</el-button>
+            <el-button
+              :disabled="sunmitflag"
+              type="primary"
+              round
+              @click="handleDetailHour"
+              >修改</el-button
+            >
+          </div>
+        </el-card>
+      </div>
+      <div class="infoTwo"></div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { getMyHourDetailt, updateHour } from "@/api/system/project";
+import { geApptConfig } from "@/api/manage/appsSett";
+
 export default {
   data() {
     return {
+      centerDialogVisible: false,
       projectList: [],
       id: null,
+      fillDate: null,
+      settiingsdata: {},
       useHourTotal: 0,
-      hourId: ""
+      hourId: 0,
+      sunmitflag: false,
+      submitTips: ""
     };
   },
   created() {
-    console.log(this.$route.query);
-    this.id = this.$route.query.id;
-    this.getmyhourdetail(this.id);
+    // console.log(this.$route.query);
+
+    // this.id = this.$route.query.id;
+    this.setTings();
+    // this.getmyhourdetail(this.id);
   },
   methods: {
+    open() {
+      if (this.id == null) {
+        this.$message.error("未填报，请重新选择");
+        // this.$router.go(-1);
+        this.centerDialogVisible = false;
+        return;
+      }
+      console.log(this.id);
+      this.getmyhourdetail(this.id);
+      this.centerDialogVisible = true;
+    },
+    setTings() {
+      geApptConfig().then(res => {
+        // console.log("settings", res);
+        if (res.code == 200) {
+          this.settiingsdata = res.data;
+        }
+      });
+    },
+    beforeClose() {
+      this.useHourTotal = 0;
+    },
     handleCannel() {
-      this.$router.go(-1);
+      this.useHourTotal = 0;
+      this.projectList = [];
+      this.centerDialogVisible = false;
+      // this.$router.go(-1);
     },
     getmyhourdetail(id) {
       getMyHourDetailt(id).then(res => {
-        console.log(res);
+        console.log("getMyHourDetailt", res);
         if (res.code == 200) {
+          this.submitTips = "可以提交";
+          if (res.data == []) {
+            this.hourId = 0;
+          } else {
+            this.hourId = res.data[0].hourId;
+          }
           this.projectList = res.data;
-          this.hourId = res.data[0].hourId;
           this.projectList.forEach(el => {
             this.useHourTotal += el.useHour;
           });
         }
+        if (res.code == 500) return;
       });
     },
     lookinput(value) {
       let hoursum = 0;
-      this.form.projectHours.forEach(el => (hoursum += el.hour));
-
-      if (!value && value == " ") {
+      this.projectList.forEach(el => (hoursum += el.useHour + 0));
+      if (value === "") {
+        console.log(value);
         this.sunmitflag = true;
         this.submitTips = "工时不能为空";
-        // value = 0;
-        if (value == 0) {
-          this.submitTips = "可以提交!";
-          this.sunmitflag = false;
-        }
-        // console.log(value)
-        // this.$message.error("工时不能为空");
-        // flag = false;
+      } else if (value === 0 && hoursum <= this.settiingsdata.workTime) {
+        this.submitTips = "可以提交!";
+        this.sunmitflag = false;
       } else {
-        if (!Number.isInteger(value)) {
-          this.sunmitflag = true;
-          // this.$message.error("工时请输入数字值!");
-          this.submitTips = "工时请输入数字值!";
-
-          // flag = false;
+        console.log("到了", hoursum);
+        if (this.settiingsdata.overtimeAllow && hoursum <= 24) {
+          this.sunmitflag = false;
+          this.submitTips = "可以提交!（加班）";
         } else {
-          if (value >= 9 || value < 0) {
+          if (hoursum > 24) {
             this.sunmitflag = true;
-            // this.$message.error("工时范围为0-8小时!");
-            this.submitTips = "工时范围为0-8小时!";
-
-            // flag = false;
-          } else {
-            if (hoursum < 9) {
-              this.sunmitflag = false;
-              this.submitTips = "可以提交！";
-              // console.log(value);
-            } else {
-              this.sunmitflag = true;
-              // this.$message.error("总工时不能大于8小时!");
-              this.submitTips = "总工时不能大于8小时!当前为" + hoursum + "小时";
-            }
+            this.submitTips = `工时最大范围为0-24小时!`;
+          } else if (hoursum > this.settiingsdata.workTime) {
+            this.sunmitflag = true;
+            this.submitTips = `工时范围为0-${this.settiingsdata.workTime}小时!`;
+          } else if (hoursum <= this.settiingsdata.workTime) {
+            this.sunmitflag = false;
+            this.submitTips = "可以提交！";
           }
         }
       }
     },
     handleDetailHour() {
-      console.log("修改工时");
+      // console.log("修改工时");
       let _this = this;
 
       let data = {
@@ -172,20 +235,36 @@ export default {
         let temp = {
           detailId: el.id,
           hour: el.useHour,
-          projectId: el.projectId
+          projectId: el.projectId,
+          daily: el.daily
         };
         data.projectHours.push(temp);
       });
-      console.log(data);
-      if (this.useHourTotal > 8) {
-        alert("总计不可超过8小时");
+      // console.log(data);
+      if (this.settiingsdata.overtimeAllow) {
+        updateHour(data).then(res => {
+          // console.log(res);
+          if (res.code == 200) {
+            this.$message.success(res.msg);
+            // _this.$router.go(-1);
+            this.centerDialogVisible = false;
+            // this.$router.push({path:"/workingHours/myWorkingHours"})
+          } else {
+            this.$message.danger(res.msg);
+          }
+        });
+      } else if (this.useHourTotal > this.settiingsdata.workTime) {
+        alert(`总计不可超过${this.settiingsdata.workTime}小时`);
       } else {
         // alert('用了工时'+ this.useHourTotal)
         updateHour(data).then(res => {
-          console.log(res);
+          // console.log(res);
           if (res.code == 200) {
             this.$message.success(res.msg);
-            _this.$router.go(-1);
+            // _this.$router.go(-1);
+            this.useHourTotal = 0;
+            this.centerDialogVisible = false;
+
             // this.$router.push({path:"/workingHours/myWorkingHours"})
           } else {
             this.$message.danger(res.msg);
@@ -216,10 +295,13 @@ export default {
 }
 
 .item {
-  margin-bottom: 18px;
+  // margin-bottom: 18px;
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
+}
+.footer-btn.item {
+  margin-bottom: 0;
 }
 
 .clearfix:before,
@@ -232,7 +314,7 @@ export default {
 }
 
 .box-card {
-  width: 30%;
+  width: 100%;
   margin: 0 auto;
 }
 .tableOne {
@@ -243,5 +325,20 @@ export default {
 }
 .tablethree {
   width: 30%;
+}
+.tips {
+  // text-align: center;
+  color: red;
+  font-size: 12px;
+  margin: 0 auto;
+}
+::v-deep .el-dialog {
+  margin-bottom: 15vh;
+}
+::v-deep .el-dialog__body {
+  padding-bottom: 0 !important;
+}
+::v-deep .el-form-item {
+  margin-bottom: 28px;
 }
 </style>

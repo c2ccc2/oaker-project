@@ -18,27 +18,21 @@ import java.util.Date;
 @ApiModel(value = "PrDocVO", description = "文档列表查询类")
 public class PrDocVO {
 
-    /** id */
     @ApiModelProperty("id")
     private Long id;
 
-    /** 文档名称 */
     @ApiModelProperty("文档名称")
     private String docName;
 
-    /** 文档地址 */
     @ApiModelProperty("文档地址")
     private String docUrl;
 
-    /** 创建人 */
     @ApiModelProperty("创建人")
     private Long createUser;
 
-    /** 创建人名称 */
     @ApiModelProperty("创建人名称")
     private String createUserName;
 
-    /** 创建时间 */
     @ApiModelProperty("创建时间")
     private Date createTime;
 

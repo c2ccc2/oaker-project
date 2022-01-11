@@ -1,5 +1,7 @@
 package com.oaker.common.core.page;
 
+import com.oaker.common.constant.HttpStatus;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -24,7 +26,7 @@ public class TableDataInfo implements Serializable {
     /**
      * 消息状态码
      */
-    private int code;
+    private int code = HttpStatus.SUCCESS;
 
     /**
      * 消息内容

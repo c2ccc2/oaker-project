@@ -63,6 +63,17 @@ export function updateModify(data) {
     data: data
   })
 }
+
+// 更改项目成员每日上报分组接口
+export function updateUserEveryday(data) {
+  return request({
+    type:'form',
+    url: '/system/project/user/everyday',
+    method: 'put',
+    data: data
+  })
+}
+
 // 项目人员增加
 export function addProjectUsers(data) {
   return request({

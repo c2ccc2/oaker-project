@@ -1,6 +1,7 @@
 package com.oaker.system.mapper;
 
 import com.oaker.system.domain.SysPost;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -96,4 +97,11 @@ public interface SysPostMapper {
      * @return 结果
      */
     public SysPost checkPostCodeUnique(String postCode);
+
+    /**
+     * 统计岗位数量
+     * @param postName
+     * @return
+     */
+    int countPost(@Param("postName") String postName);
 }

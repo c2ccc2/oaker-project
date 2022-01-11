@@ -39,6 +39,10 @@ public class ProjectUser {
     @TableField(value = "remove_time")
     private Date removeTime;
 
+    /** 是否需要每日上报工时 0 不需要  1 需要 */
+    @TableField(value = "everyday")
+    private Boolean everyday;
+
     /** 创建人 */
     @TableField(value = "create_user")
     private Long createUser;

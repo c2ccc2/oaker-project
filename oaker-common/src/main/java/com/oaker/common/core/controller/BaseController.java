@@ -75,6 +75,10 @@ public class BaseController {
         return new Page(pageStart, pageSize);
     }
 
+    public static int pageNumToStart(int pageNum, int pageSize) {
+        return (pageNum - 1) * pageSize;
+    }
+
     /**
      * 设置请求排序数据
      */

@@ -77,5 +77,19 @@ public interface PrPrototypeService {
      */
     PrPrototype getByPubId(String pubId);
 
+    /**
+     * 更新原型记录中效果图字段
+     * @param prototypeId
+     * @param sketchId
+     * @return
+     */
+    boolean setSketchId(Long prototypeId, Long sketchId);
 
+    /**
+     * 删除效果图
+     * @param id
+     * @param sketchId
+     * @return
+     */
+    boolean deleteSketch(Long id, Long sketchId);
 }

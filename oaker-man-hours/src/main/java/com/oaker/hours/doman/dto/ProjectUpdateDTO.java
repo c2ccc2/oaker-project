@@ -7,6 +7,7 @@ import lombok.Data;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 
 /**
  * @Description :  项目修改类
@@ -34,6 +35,13 @@ public class ProjectUpdateDTO {
     @ApiModelProperty(value = "项目描述(长度不能超过500)")
     @Size(max = 500, message = "项目描述长度不能超过500")
     private String remark;
+
+    @ApiModelProperty(value = "开始日期")
+    @NotNull(message = "项目开始时间不能为空")
+    private LocalDate startDate;
+
+    @ApiModelProperty(value = "结束日期")
+    private LocalDate endDate;
 
 
 }

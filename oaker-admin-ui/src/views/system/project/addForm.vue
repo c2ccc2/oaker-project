@@ -21,6 +21,29 @@
             placeholder="请输入项目编码"
           ></el-input>
         </el-form-item>
+        <el-form-item label="开始时间" prop="startDate">
+          <div class="block">
+            <el-date-picker
+              v-model="ruleForm.startDate"
+              type="date"
+              value-format="yyyy-MM-dd"
+              placeholder="开始日期"
+              @change="showdate"
+            >
+            </el-date-picker>
+          </div>
+        </el-form-item>
+        <el-form-item label="结束时间">
+          <div class="block">
+            <el-date-picker
+              v-model="ruleForm.endDate"
+              type="date"
+              value-format="yyyy-MM-dd"
+              placeholder="结束日期"
+            >
+            </el-date-picker>
+          </div>
+        </el-form-item>
         <el-form-item label="预计投入" prop="duration">
           <el-input
             v-model.number="ruleForm.duration"
@@ -70,7 +93,7 @@
           <el-input
             type="text"
             :disabled="true"
-            placeholder="1人月=22人天，1人天=8工时"
+            :placeholder="placeholderTips"
           ></el-input>
         </el-form-item>
         <!-- <el-form-item>
@@ -96,12 +119,15 @@ export default {
   name: "addform",
   data() {
     return {
+      placeholderTips: `1人月=22人天，1人天=${this.$store.state.user.appconfig.workTime}工时`,
       dialogFormVisible: false,
       formLabelWidth: "120px",
       projectManagerArr: [],
       ruleForm: {
         projectName: "",
         projectCode: "",
+        startDate: "",
+        endDate: "",
         duration: "",
         projectManager: "",
         remark: ""
@@ -114,6 +140,14 @@ export default {
         projectCode: [
           { required: true, message: "请输入项目编码", trigger: "blur" },
           { min: 4, max: 64, message: "长度在 4 到 64 个字符", trigger: "blur" }
+        ],
+        startDate: [
+          {
+            type: "string",
+            required: true,
+            message: "请选择日期",
+            trigger: "change"
+          }
         ],
         duration: [
           { required: true, message: "请输入工时", trigger: "blur" },
@@ -140,17 +174,36 @@ export default {
     this.getprojectManager();
   },
   methods: {
+    showdate(value) {
+      // console.log(value);
+    },
     open() {
       this.getprojectManager();
       this.dialogFormVisible = true;
+      this.gettady();
     },
     closeForm() {
       this.resetForm("ruleForm");
       this.dialogFormVisible = false;
     },
+    gettady() {
+      let date = new Date();
+      let yyyy = date.getFullYear();
+      let mm = date.getMonth() + 1;
+      let dd = date.getDate();
+      if (mm < 10) {
+        mm = "0" + mm;
+      }
+      if (dd < 10) {
+        dd = "0" + dd;
+      }
+      let timetaday = yyyy + "-" + mm + "-" + dd;
+      // console.log(timetaday);
+      this.ruleForm.startDate = timetaday;
+    },
     getprojectManager() {
       getBox().then(res => {
-        console.log(res);
+        // console.log(res);
         if (res.code == 200) {
           this.projectManagerArr = res.data;
         }
@@ -158,18 +211,22 @@ export default {
     },
     edithourUnit() {
       if (this.hourUnit == 0) {
-        this.ruleForm.duration = this.ruleForm.duration * 8;
-        console.log(this.ruleForm.duration);
+        this.ruleForm.duration =
+          this.ruleForm.duration * this.$store.state.user.appconfig.workTime;
+        // console.log(this.ruleForm.duration);
         return this.ruleForm.duration;
       } else if (this.hourUnit == 1) {
-        this.ruleForm.duration = this.ruleForm.duration * 8 * 22;
-        console.log(this.ruleForm.duration);
+        this.ruleForm.duration =
+          this.ruleForm.duration *
+          this.$store.state.user.appconfig.workTime *
+          this.$store.state.user.appconfig.workDay;
+        // console.log(this.ruleForm.duration);
         return this.ruleForm.duration;
       }
     },
     lookduration(value) {
       // 工时检验
-      console.log(value);
+      // console.log(value);
     },
     validateJyh(projectCode) {
       // 项目编码校验规则
@@ -188,14 +245,14 @@ export default {
         if (valid) {
           // let temphour = this.ruleForm.duration;
           this.ruleForm.temp = this.ruleForm.duration;
-          console.log("temphour", this.ruleForm.temp);
+          // console.log("temphour", this.ruleForm.temp);
           this.edithourUnit();
           // alert("submit!");
 
-          console.log(this.ruleForm);
+          // console.log(this.ruleForm);
           createProject(this.ruleForm)
             .then(res => {
-              console.log(res);
+              // console.log(res);
               if (res.code == 200) {
                 this.resetForm(formName);
                 this.dialogFormVisible = false;
@@ -205,19 +262,27 @@ export default {
             .catch(error => {
               //  if (res.code == 500) {
               this.ruleForm.duration = this.ruleForm.temp;
-              this.$message.warning('工时还原为'+this.ruleForm.temp)
+              this.$message.warning("工时还原为" + this.ruleForm.temp);
               // console.log("temphour", this.ruleForm.temp);
               // }
-              console.log(error);
+              // console.log(error);
             });
         } else {
-          console.log("error submit!!");
+          // console.log("error submit!!");
           return false;
         }
       });
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
+    },
+    showSartDate(starDate) {
+      // console.log(111);
+      // console.log(starDate);
+      // console.log(minDate)
+    },
+    showEndDate(endDate) {
+      // console.log(endDate);
     }
   }
 };

@@ -95,6 +95,22 @@ public class OakerConfig {
     }
 
     /**
+     * 获取原型文件上传基础路径
+     * @return
+     */
+    public static String getSketchPath() {
+        return getProfile() + "/sketch";
+    }
+
+    /**
+     * 获取原型文件上传基础路径
+     * @return
+     */
+    public static String getLogoPath() {
+        return getUploadPath() + "/logo";
+    }
+
+    /**
      * 获取下载路径
      */
     public static String getDownloadPath() {

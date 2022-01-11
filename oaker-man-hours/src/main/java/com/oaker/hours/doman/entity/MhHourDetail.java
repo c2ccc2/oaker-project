@@ -47,6 +47,18 @@ public class MhHourDetail implements Serializable {
     @TableField(value = "fill_date")
     private LocalDate fillDate;
 
+    /** 项目状态：a 进行中，b运维，c 结束 */
+    @TableField(value = "project_status")
+    private String projectStatus;
+
+    /** 是否为每日上报工时记录 */
+    @TableField(value = "everyday")
+    private Boolean everyday;
+
+    /** 日报内容 */
+    @TableField(value = "daily")
+    private String daily;
+
     /** 更新时间 */
     @TableField(value = "update_time")
     private Date updateTime;

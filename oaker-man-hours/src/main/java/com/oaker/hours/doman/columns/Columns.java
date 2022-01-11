@@ -17,6 +17,7 @@ public interface Columns {
 
     String id = "id";
     String deleted = "deleted";
+    String delFlag = "del_flag";
     String createBy = "create_by";
     String createTime = "create_time";
     String updateBy = "update_by";
@@ -27,6 +28,9 @@ public interface Columns {
         String projectName = "project_name";
         String projectCode = "project_code";
         String projectManager = "project_manager";
+        String enable = "enable";
+        String startDate = "start_date";
+        String endDate = "end_date";
         String projectStatus = "project_status";
         String remark = "remark";
     }
@@ -43,6 +47,7 @@ public interface Columns {
         String userId = "user_id";
         String status = "status";
         String removeTime = "remove_time";
+        String everyday = "everyday";
         String createUser = "create_user";
         String createTime = "create_time";
         String updateUser = "update_user";
@@ -96,9 +101,46 @@ public interface Columns {
         String remark = "remark";
     }
 
+    interface MhPostCost {
+        String postId = "post_id";
+        String cost = "cost";
+        String createUser = "create_user";
+        String updateUser = "update_user";
+    }
+
+    interface MhUserCost {
+        String postId = "user_id";
+        String cost = "cost";
+        String createUser = "create_user";
+        String updateUser = "update_user";
+    }
+
+    interface MhCost {
+        String projectId = "project_id";
+        String userId = "user_id";
+        String postCost = "post_cost";
+        String userCost = "user_cost";
+        String costDate = "cost_date";
+        String projectStatus = "project_status";
+    }
+
+    interface MhUserLeave {
+        String userId = "user_id";
+        String leaveDate = "leave_date";
+        String leaveType = "leave_type";
+    }
+
+    interface MhUserLeaveDetail {
+        String leaveId = "leave_id";
+        String projectId = "project_id";
+        String projectStatus = "project_status";
+        String userId = "user_id";
+        String leaveDate = "leave_date";
+        String leaveType = "leave_type";
+    }
 
     public static void main(String[] args) {
-        Field[] fields = ProjectHour.class.getDeclaredFields();
+        Field[] fields = MhUserLeave.class.getDeclaredFields();
         for (Field field : fields) {
             String column = null;
             TableId tableId = field.getAnnotation(TableId.class);

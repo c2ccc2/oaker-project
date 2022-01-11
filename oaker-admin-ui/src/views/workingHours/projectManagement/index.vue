@@ -15,20 +15,6 @@
                 >{{ item.dictLabel }}</el-button
               >
             </el-col>
-            <!-- <el-col :span="1.5">
-              <el-button type="warning" plain icon="el-icon-truck" size="mini"
-                >运维中</el-button
-              >
-            </el-col> -->
-            <!-- <el-col :span="1.5">
-              <el-button
-                type="success"
-                plain
-                icon="el-icon-folder-checked"
-                size="mini"
-                >已归档</el-button
-              >
-            </el-col> -->
             <el-col :span="1.5">
               <el-button
                 type="primary"
@@ -65,9 +51,19 @@
               align="center"
             >
             </el-table-column>
-            <el-table-column prop="projectName" label="项目名称" align="center">
+            <el-table-column
+              prop="projectName"
+              label="项目名称"
+             
+              align="center"
+            >
             </el-table-column>
-            <el-table-column prop="projectStatus" label="阶段" align="center">
+            <el-table-column
+              prop="projectStatus"
+              label="阶段"
+              width="100"
+              align="center"
+            >
               <template slot-scope="scope">
                 <p>
                   <el-tag v-if="scope.row.projectStatus == '进行中'">{{
@@ -79,14 +75,9 @@
                     >{{ scope.row.projectStatus }}</el-tag
                   >
                   <el-tag
-                    type="success"
-                    v-else-if="scope.row.projectStatus == '归档'"
+                    type="danger"
+                    v-else-if="scope.row.projectStatus == '结束'"
                     >{{ scope.row.projectStatus }}</el-tag
-                  >
-                  <el-tag
-                    type="info"
-                    v-else-if="scope.row.projectStatus != 'a' || 'b' || 'c'"
-                    >未知状态</el-tag
                   >
                 </p>
               </template>
@@ -106,14 +97,15 @@
               </template>
             </el-table-column>
 
-            <el-table-column prop="projectStatus" label="状态" align="center">
+            <el-table-column prop="projectStatus"  label="状态" align="center">
               <template slot-scope="scope">
-                <p v-if="scope.row.projectStatus == '归档'"> <el-tag type="danger">结束</el-tag></p>
+                <p v-if="scope.row.projectStatus == '归档'">
+                  <el-tag type="danger">结束</el-tag>
+                </p>
                 <p v-else>
                   <el-tag type="success" v-if="scope.row.status">正常</el-tag>
                   <el-tag type="warning" v-else>已超出</el-tag>
                 </p>
-                
               </template>
             </el-table-column>
             <!-- <el-table-column prop="createTime" label="昨天上报" align="center">
@@ -121,18 +113,44 @@
                 <p>{{ scope.row.yesFill }}/{{ scope.row.yesMustFill }}</p>
               </template>
             </el-table-column> -->
-            <el-table-column prop="createTime" label="今天上报" align="center">
+            <!-- <el-table-column
+              prop="createTime"
+              label="今天上报(今日)"
+              width="120"
+              align="center"
+            >
               <template slot-scope="scope">
-                <p>{{ scope.row.todayFill }}/{{ scope.row.todayMustFill }}</p>
+                <p @click="goDayrecord(scope.row)" class="tadaySB">
+                  {{ scope.row.todayMustFillNum }}人/{{
+                    scope.row.todayMustFill
+                  }}人
+                </p>
               </template>
             </el-table-column>
+            <el-table-column
+              prop="createTime"
+              label="今天上报(总计)"
+              width="120"
+              align="center"
+            >
+              <template slot-scope="scope">
+                <p @click="goDayrecord(scope.row)" class="tadaySB">
+                  {{ scope.row.totalFill }}人/{{ scope.row.totalFillNum }}人
+                </p>
+              </template>
+            </el-table-column> -->
 
-            <el-table-column label="操作" width="300" align="center">
+            <el-table-column
+              
+              label="操作"
+              width="380"
+              align="center"
+            >
               <template slot-scope="scope">
                 <el-button
                   @click="handlerecord(scope.row)"
                   type="primary"
-                  size="small"
+                  size="mini"
                   plain
                   v-hasPermi="['system:project:stat:fill:detail']"
                   >上报记录</el-button
@@ -140,15 +158,22 @@
                 <el-button
                   @click="handledetail(scope.row)"
                   type="primary"
-                  size="small"
+                  size="mini"
                   plain
                   v-hasPermi="['system:project:stat:query']"
                   >工时明细</el-button
                 >
                 <el-button
+                  @click="handlecostOf(scope.row)"
+                  type="primary"
+                  size="mini"
+                  plain
+                  >成本统计</el-button
+                >
+                <el-button
                   @click="handleClick(scope.row)"
                   type="primary"
-                  size="small"
+                  size="mini"
                   plain
                   v-hasPermi="['system:project:query']"
                   >项目管理</el-button
@@ -204,7 +229,7 @@ export default {
   methods: {
     init() {
       getDicttype("mh_project_status").then(res => {
-        console.log(res);
+       // console.log(res);
         if (res.code == 200) {
           this.statusBtns = res.data;
           this.statusBtns.forEach(el => {
@@ -226,7 +251,7 @@ export default {
       });
       // listProject(this.addDateRange(this.queryParams, this.dateRange)).then(
       //   res => {
-      //     console.log(res);
+         // console.log(res);
       //     if (res.code == 200) {
       //       this.total = res.total;
       //       this.tableData = res.rows;
@@ -235,8 +260,8 @@ export default {
       //     }
       //   }
       // );
-      projectHourStat().then(res => {
-        console.log("projectHourStat", res);
+      projectHourStat(this.queryParams).then(res => {
+       // console.log("projectHourStat", res);
         if (res.code == 200) {
           this.total = res.total;
           this.tableData = res.rows;
@@ -254,19 +279,10 @@ export default {
       this.init();
     },
     lookSearch(dictValue) {
-      console.log(dictValue);
-      // getProjectStatus(dictValue).then(res => {
-      //   console.log(res);
-      //   if (res.code == 200) {
-      //     // this.$message.success(res.msg);
-      //     this.total = res.total;
-      //     this.tableData = res.rows;
-      //   } else {
-      //     this.$message.error(res.msg);
-      //   }
-      // });
-      projectHourStatStatus(dictValue).then(res => {
-        console.log("status", res);
+     // console.log(dictValue);
+      this.queryParams.projectStatus=dictValue
+      projectHourStatStatus(this.queryParams).then(res => {
+       // console.log("status", res);
         if (res.code == 200) {
           // this.$message.success(res.msg);
           this.total = res.total;
@@ -275,36 +291,44 @@ export default {
             el.trjd = this.setPercentage(el.useHour, el.totalHour);
             el.status = this.judgeState(el.useHour, el.totalHour);
           });
-        }else if(res.code==0){
-         if(res.rows==null){
-           this.tableData = [];
-         }
+        } else if (res.code == 0) {
+          if (res.rows == null) {
+            this.tableData = [];
+          }
         } else {
           this.$message.error(res.msg);
         }
       });
     },
     lookDate() {
+      this.queryParams.projectStatus=undefined
       this.init();
     },
     newProject() {
-      console.log("创建项目");
+     // console.log("创建项目");
       this.$refs.addform.open();
     },
     handleClick(row) {
-      console.log(row);
+     // console.log(row);
       let projectId = row.projectId;
-      console.log(projectId);
-      this.$router.push({ path: "/projectManagement/projectSettingsHour", query: { projectId } });
+     // console.log(projectId);
+      this.$router.push({
+        path: "/projectManagement/projectSettingsHour",
+        query: { projectId }
+      });
     },
 
     handlerecord(row) {
-      console.log(row);
+     // console.log(row);
       let projectId = row.projectId;
       let totalHour = row.totalHour;
-      console.log(projectId);
+     // console.log(projectId);
+      // this.$router.push({
+      //   path: "/projectManagement/workingHoursForDetails",
+      //   query: { projectId, totalHour: row.useHour }
+      // });
       this.$router.push({
-        path: "/projectManagement/workingHoursForDetails",
+        path: "/projectManagement/newWorkingHouring",
         query: { projectId, totalHour: row.useHour }
       });
     },
@@ -316,7 +340,7 @@ export default {
       });
     },
     setPercentage(num, total) {
-      // console.log("setPercentage", num, total);
+     // console.log("setPercentage", num, total);
       num = parseFloat(num);
       total = parseFloat(total);
       if (isNaN(num) || isNaN(total)) {
@@ -332,6 +356,22 @@ export default {
       } else {
         return true;
       }
+    },
+    handlecostOf(row) {
+     // console.log(row);
+      let projectId = row.projectId;
+      this.$router.push({
+        path: "/projectManagement/costStatistics",
+        query: { projectId }
+      });
+    },
+    goDayrecord(row) {
+     // console.log(row);
+      let projectId = row.projectId;
+      this.$router.push({
+        path: "/projectManagement/tadayForHour",
+        query: { projectId }
+      });
     }
   }
 };
@@ -357,5 +397,10 @@ export default {
 
 .box-card {
   width: 100%;
+}
+.tadaySB {
+  cursor: pointer;
+  color: #0093ff;
+  text-decoration: underline;
 }
 </style>

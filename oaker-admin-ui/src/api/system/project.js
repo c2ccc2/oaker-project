@@ -83,6 +83,16 @@ export function updaProjectStatus(projectId, projectStatus) {
     params: data
   })
 }
+// 设置项目 暂停/启用 状态
+export function enableProjectStatus(data) {
+  return request({
+    type: 'form',
+    url: '/system/project/enable',
+    method: 'put',
+    data: data
+  })
+}
+
 //用户查询自己参与的项目
 export function getMyProjectAll() {
   return request({
@@ -104,10 +114,18 @@ export function getMyHourList(endDate, startDate) {
     method: 'get'
   })
 }
+//查询查询用户缺报记录-分页
+export function getMyHourListMiss(params) {
+  return request({
+    url: `/mh/hour/list/miss`,
+    method: 'get',
+    params
+  })
+}
 // 用户查询参与项目不包含已归档的项目
 export function getMyActorProject(date) {
   return request({
-    url: '/system/project/user/my/project?date='+date,
+    url: '/system/project/user/my/project?date=' + date,
     method: 'get'
   })
 }
@@ -117,6 +135,21 @@ export function createHour(data) {
     url: '/mh/hour/create',
     method: 'post',
     data: data
+  })
+}
+
+// 请假type为1/调休type为2接口
+export function leaveHour(date, type) {
+  return request({
+    url: '/mh/hour/leave?leaveDate=' + date + '&leaveType=' + type,
+    method: 'post',
+  })
+}
+// 取消请假/调休接口
+export function CancelleaveHour(id) {
+  return request({
+    url: '/mh/hour/unLeave?id=' + id,
+    method: 'post',
   })
 }
 // 查询我的工时详情
@@ -142,52 +175,105 @@ export function getHourStat(date) {
   })
 }
 // 我的统计-详细模式
-export function getHourStatDetail(date) {
+export function getHourStatDetail(params) {
   return request({
-    url: '/mh/hour/stat/detail?date=' + date,
-    method: 'get'
+    url: '/mh/hour/stat/detail',
+    method: 'get',
+    params
   })
 }
 // 项目工时统计列表
-export function projectHourStat() {
+export function projectHourStat(params) {
   return request({
-    url:'/system/project/hour/stat',
+    url: '/system/project/hour/stat',
     // url:'/system/project/hour/stat?projectStatus=',
-    method:'get'
+    method: 'get',
+    params
   })
 }
 // 项目工时统计列表-按状态
-export function projectHourStatStatus(status) {
+export function projectHourStatStatus(params) {
   return request({
-    url:'/system/project/hour/stat?projectStatus='+status,
-    method:'get'
+    url: '/system/project/hour/stat',
+    method: 'get',
+    params
   })
 }
 // 项目上报记录
 export function projectHourStatFillDetail(params) {
   return request({
-    url:`/system/project/hour/stat/fill/detail?date=${params.date}&projectId=${params.projectId}`,
-    method:'get'
+    url: `/system/project/hour/stat/fill/detail?date=${params.date}&projectId=${params.projectId}`,
+    method: 'get'
   })
 }
 // 项目工时统计列表详情-按月统计
 export function projectHourMonth(id) {
   return request({
-    url:'/system/project/hour/stat/hour/month?projectId='+id,
-    method:'get'
+    url: '/system/project/hour/stat/hour/month?projectId=' + id,
+    method: 'get'
   })
 }
 // 项目工时统计列表详情-按月统计详情
-export function projectHourMonthDetail(id,date) {
+export function projectHourMonthDetail(params) {
   return request({
-    url:`/system/project/hour/stat/hour/month/detail?projectId=${id}&yearMonth=${date}`,
-    method:'get'
+    url: `/system/project/hour/stat/hour/month/detail`,
+    method: 'get',
+    params
   })
 }
 // 项目工时统计列表详情-按人统计
-export function projectHourUser(id,date) {
+export function projectHourUser(id) {
   return request({
-    url:`/system/project/hour/stat/hour/user?projectId=${id}&yearMonth=${date}`,
-    method:'get'
+    url: `/system/project/hour/stat/hour/user?projectId=${id}`,
+    method: 'get'
   })
 }
+// 项目日报日历
+export function getProjectHourdailyCalendar(params) {
+  return request({
+    url: '/system/project/hour/daily/calendar',
+    method: 'get',
+    params
+  })
+}
+//项目日报日历详情
+export function getProjectHourdailyCalendarDeatil(params) {
+  return request({
+    url: '/system/project/hour/daily/calendar/detail',
+    method: 'get',
+    params
+  })
+}
+//项目日报-列表
+export function getProjectHourDailyList(params) {
+  return request({
+    url: '/system/project/hour/daily/list',
+    method: 'get',
+    params
+  })
+}
+//用户填报记录导出
+export function getStatExport(params) {
+  return request({
+    url:'/mh/hour/stat/export',
+    method:'get',
+    params
+  })
+}
+// 填报记录日历
+export function getProjectHourCalendar(date) {
+  return request({
+    url: '/mh/hour/calendar?date='+date,
+    method: 'get'
+  })
+}
+// 填报记录-按项目展示
+export function getStatProject(date) {
+  return request({
+    url: '/mh/hour/stat/project?date='+date,
+    method: 'get'
+  })
+}
+
+
+

@@ -46,6 +46,12 @@ public class ProjectUserFillVO {
         @ApiModelProperty("创建时间")
         private Date createTime;
 
+        @ApiModelProperty("是否为每日上报组")
+        private Boolean everyday;
+
+        @ApiModelProperty("填报状态：1 已填报， 2 未填报， 3不需填报, 4 节假日, 5 请假， 6调休")
+        private int fillStatus;
+
     }
 
 }

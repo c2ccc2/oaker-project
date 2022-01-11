@@ -104,4 +104,11 @@ public interface ISysPostService {
      * @return
      */
     SysPost getByUserId(Long userId);
+
+    /**
+     * 统计岗位数量
+     * @return
+     */
+    int countPost(String postName);
+
 }

@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <el-dialog title="编辑" :visible.sync="dialogFormVisible">
+    <el-dialog title="编辑" :visible.sync="dialogFormVisible" width="30%">
       <el-form :model="form">
         <el-form-item label="名称:" :label-width="formLabelWidth">
           <el-input v-model="form.name" auto-complete="off"></el-input>
@@ -15,16 +15,16 @@
 </template>
 
 <script>
-import {updateProto} from '@/api/prototype/prototype'
+import { updateProto } from "@/api/prototype/prototype";
 export default {
   data() {
     return {
       form: {
-        id:null,
+        id: null,
         name: ""
       },
       dialogFormVisible: false,
-      formLabelWidth: "120px"
+      formLabelWidth: "60px"
     };
   },
   methods: {
@@ -32,16 +32,16 @@ export default {
       this.dialogFormVisible = true;
     },
     handleEdit() {
-      console.log(this.form)
-      this.form.id=this.id
-      updateProto(this.form).then(res=>{
-        console.log(res)
-        if(res.code==200){
-          this.$parent.init()
-          this.$message.success('修改成功！')
-          this.form={}
+      // console.log(this.form)
+      this.form.id = this.id;
+      updateProto(this.form).then(res => {
+        // console.log(res)
+        if (res.code == 200) {
+          this.$parent.init();
+          this.$message.success("修改成功！");
+          this.form = {};
         }
-      })
+      });
       this.dialogFormVisible = false;
     }
   }

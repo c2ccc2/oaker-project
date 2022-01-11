@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oaker.hours.mapper.MhCostMapper">
+
+    <select id="count" resultType="java.lang.Integer">
+        SELECT
+        COUNT(mc.id)
+        FROM mh_cost AS mc LEFT JOIN sys_user_post sup ON mc.user_id = sup.user_id
+        <where>
+            mc.project_id = #{dto.projectId}
+            <if test="dto.month != null and dto.month != ''">
+                AND mc.cost_date LIKE concat(#{dto.month}, '%')
+            </if>
+            <if test="dto.date != null">
+                AND mc.cost_date = #{dto.date}
+            </if>
+            <if test="dto.projectStatus != null and dto.projectStatus != ''">
+                AND mc.project_status = #{dto.projectStatus}
+            </if>
+            <if test="dto.userId != null">
+                AND mc.user_id = #{dto.userId}
+            </if>
+            <if test="dto.postId != null">
+                AND sup.post_id = #{dto.postId}
+            </if>
+        </where>
+    </select>
+    <select id="query" resultType="com.oaker.hours.doman.vo.MhCostListVO">
+        SELECT
+        mc.id AS id
+        , mc.user_id AS userId
+        , mc.cost_date AS costDate
+        , mc.use_hour AS useHour
+        , mc.project_status AS projectStatus
+        , mc.user_cost AS userCost
+        , mc.post_cost AS postCost
+        , mc.create_time AS createTime
+        , sup.post_id AS postId
+        FROM mh_cost AS mc LEFT JOIN sys_user_post sup ON mc.user_id = sup.user_id
+        <where>
+            mc.project_id = #{dto.projectId}
+            <if test="dto.month != null and dto.month != ''">
+                AND mc.cost_date LIKE concat(#{dto.month}, '%')
+            </if>
+            <if test="dto.date != null">
+                AND mc.cost_date = #{dto.date}
+            </if>
+            <if test="dto.projectStatus != null and dto.projectStatus != ''">
+                AND mc.project_status = #{dto.projectStatus}
+            </if>
+            <if test="dto.userId != null">
+                AND mc.user_id = #{dto.userId}
+            </if>
+            <if test="dto.postId != null">
+                AND sup.post_id = #{dto.postId}
+            </if>
+            LIMIT #{pageStart},#{pageSize}
+        </where>
+    </select>
+</mapper>

@@ -2,12 +2,13 @@
   <div class="main">
     <!-- <h1>上传原型</h1> -->
     <el-dialog title="原型上传" :visible.sync="dialogFormVisible">
-      <el-form ref="form" :model="form" label-width="170px" class="cusForm">
+      <el-form ref="form" :model="form" label-width="90px" class="cusForm">
         <el-form-item label="原型名称：">
-          <el-input v-model="form.name"></el-input>
+          <el-input v-model="form.name" placeholder="请输入原型名称"></el-input>
         </el-form-item>
         <el-form-item label="所属项目：">
           <el-select
+          style="width:100%"
             v-model="value4"
             clearable
             placeholder="请选择"
@@ -49,11 +50,11 @@
               style="margin-left: 10px;height:26px"
             ></el-button>
             <div slot="tip" class="el-upload__tip">
-              文件格式仅限DOC/DOCX/TXT,RAR,ZIP等格式。
+              文件格式仅限doc,docx,xls,xlsx,ppt,pptx,txt,rar,zip,gz,bz2,pdf等格式。
             </div>
           </el-upload>
         </el-form-item>
-        <el-form-item label="原型文件(含start.html)：" v-if="changePermi">
+        <el-form-item label="原型文件：" v-if="changePermi">
           <el-upload
             class="upload-demo"
             ref="uploadZip"
@@ -83,7 +84,38 @@
             >上传文件</el-button
           > -->
             <div slot="tip" class="el-upload__tip">
-              文件格式仅限包含HTML文件的ZIP压缩包，并且只能上传一个。
+              文件格式仅限包含start.html文件的ZIP压缩包，并且只能上传一个。
+            </div>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="效果图管理:" >
+          <el-upload
+            class="upload-demo"
+            ref="uploadImg"
+            multiple
+            :data="dataImg"
+            :headers="Headers"
+            :action="fileImgUrl"
+            :on-preview="handlePreview"
+            :on-remove="handleRemove"
+            :before-upload="handleBeforeImg"
+            :on-success="handleSuccess"
+            :file-list="fileListIMG"
+            :auto-upload="false"
+          >
+            <el-button
+              style="padding:6px"
+              slot="trigger"
+              size="small"
+              type="primary"
+              >选取文件</el-button
+            >
+            <el-button
+              v-show="false"
+              style="margin-left: 10px;height:26px"
+            ></el-button>
+            <div slot="tip" class="el-upload__tip">
+              文件格式仅限doc,docx,xls,xlsx,ppt,pptx,txt,rar,zip,gz,bz2,pdf等格式。
             </div>
           </el-upload>
         </el-form-item>
@@ -122,12 +154,17 @@ export default {
         upType: "proto",
         prototypeId: null
       },
+      dataImg:{
+        prototypeId: null
+      },
       Headers: {
         Authorization: "Bearer " + getToken()
       },
       fileListDOC: [],
       fileListZIP: [],
+      fileListIMG: [],
       fileUrl: process.env.VUE_APP_BASE_API + "/pr/proto/upload",
+      fileImgUrl: process.env.VUE_APP_BASE_API + "/pr/proto/upload",
       changePermi: false
     };
   },
@@ -149,8 +186,9 @@ export default {
       this.dialogFormVisible = false;
       this.fileListDOC = [];
       this.fileListZIP = [];
+      this.fileListIMG = [];
       this.form = { name: "", projectId: "" };
-      console.clear();
+      // console.clear();
     },
     init() {
       // console.log(this.id);
@@ -178,7 +216,7 @@ export default {
       // console.log(this.params);
     },
     onSubmit() {
-      console.log(this.form);
+      // console.log(this.form);
       // console.log("submit!");
       if (this.form.name) {
         createProto(this.form).then(res => {
@@ -186,6 +224,7 @@ export default {
           if (res.code == 200) {
             this.dataDoc.prototypeId = res.id;
             this.datazip.prototypeId = res.id;
+            this.dataImg.prototypeId = res.id;
             // console.log(this.dataDoc.prototypeId);
             this.$message.success("成功创建！" + this.form.name);
             if (this.changePermi) {
@@ -204,6 +243,7 @@ export default {
       if (this.id) {
         this.$refs.uploadDoc.submit();
         this.$refs.uploadZip.submit();
+        this.$refs.uploadImg.submit();
       } else {
         this.$message.error("请选择项目，并输入项目名称");
       }
@@ -230,7 +270,7 @@ export default {
         this.$message({
           type: "warning",
           message:
-            "需求文档请上传后缀名为[doc,docx,xls,xlsx,ppt,pptx,,txt,rar,zip,gz,bz2,pdf]的文件！"
+            "需求文档请上传后缀名为[doc,docx,xls,xlsx,ppt,pptx,txt,rar,zip,gz,bz2,pdf]的文件！"
         });
         return false;
       }
@@ -246,6 +286,17 @@ export default {
         return false;
       }
     },
+    handleBeforeImg(file) {
+      // console.log("handleBefore", file);
+      var FileExt = file.name.replace(/.+\./, "");
+      if (["zip"].indexOf(FileExt.toLowerCase()) === -1) {
+        this.$message({
+          type: "warning",
+          message: "效果图文件请上传后缀名为[zip]的文件！"
+        });
+        return false;
+      }
+    },
     handleSuccess(res, file, fileList) {
       // console.log("handleSuccess", res, file, fileList);
       if (res.code == 200) {
@@ -255,16 +306,16 @@ export default {
       }
     },
     handleRemove(file, fileList) {
-      console.log("handleRemove", file, fileList);
+      // console.log("handleRemove", file, fileList);
     },
     handlePreview(file) {
-      console.log("file", file);
+      // console.log("file", file);
     },
     permiChange() {
-      console.log("permissions", this.$store.state);
+      // console.log("permissions", this.$store.state);
       let arrPer = this.$store.state.user.permissions;
       let indexPer = arrPer.indexOf("pr:proto:upload");
-      console.log("indexPer", indexPer);
+      // console.log("indexPer", indexPer);
       if (indexPer != -1) {
         // console.log('我有上传权限')
         this.changePermi = true;

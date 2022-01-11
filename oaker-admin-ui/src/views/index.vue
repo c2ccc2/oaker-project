@@ -4,18 +4,18 @@
     <!-- <h6>{{ usertime }},{{ username }}</h6>
     <hr /> -->
     <el-row>
-      <el-col :span="17">
+      <el-col :span="15">
         <div class="title-header">
           <div class="left header-left">进行中的项目</div>
           <div class="right">全部项目</div>
         </div>
-        <div class="grid-content bg-purple ">
+        <div class="grid-content ">
           <el-row class="myprocard">
             <el-col
               :span="7"
               v-for="item in peojectcardInfo"
               :key="item.projectId"
-              ><div class="grid-content bg-purple">
+              ><div class="grid-content ">
                 <el-card class="box-card" shadow="hover">
                   <div slot="header" class="clearfix">
                     <b style="font-size:16px">{{ item.projectName }}</b>
@@ -39,10 +39,10 @@
                       <div class="top">
                         <p>今日上报：</p>
                         <p
-                          v-if="item.dayHour == '-1'"
+                          v-if="item.dayHour != '1'"
                           style="width:100%;font-weight:600;font-size:16px;"
                         >
-                          未上报
+                          {{ IndexFillInfo.tagName }}
                         </p>
                         <p
                           v-else
@@ -52,15 +52,17 @@
                         </p>
                       </div>
                       <div class="bottom">
-                        <p>总投入：</p>
                         <p style="width:100%;font-weight:600;font-size:14px;">
+                          总投入：
+                        </p>
+                        <p style="width:100%;font-weight:600;font-size:12px;">
                           {{ item.useHour }}小时({{
-                            (item.useHour / 8).toFixed(2)
+                            (item.useHour / workTime).toFixed(2)
                           }}人天)
                         </p>
                       </div>
                     </div>
-                    <div class="right">
+                    <!-- <div class="right">
                       <div class="top">
                         <p>昨日上报：</p>
                         <p
@@ -76,14 +78,7 @@
                           {{ item.yesHour }}工时
                         </p>
                       </div>
-                      <!-- <div class="bottom">
-                        <el-progress
-                          type="circle"
-                          :width="80"
-                          :percentage="25"
-                        ></el-progress>
-                      </div> -->
-                    </div>
+                    </div> -->
                   </div>
                   <el-divider />
                   <div class="card-footer">
@@ -95,60 +90,69 @@
                 </el-card>
               </div></el-col
             >
-            <el-col :span="7"
-              ><div class="grid-content bg-purple"></div
-            ></el-col>
-            <el-col :span="7"
-              ><div class="grid-content bg-purple"></div
-            ></el-col>
-            <el-col :span="7"
-              ><div class="grid-content bg-purple"></div
-            ></el-col>
+            <el-col :span="7"><div class="grid-content "></div></el-col>
+            <el-col :span="7"><div class="grid-content "></div></el-col>
+            <el-col :span="7"><div class="grid-content "></div></el-col>
           </el-row>
         </div>
-        <div class="grid-content bg-purple">
+        <div class="grid-content ">
           <div class="Tips">
             <div class="header-title">
               <strong>使用说明</strong>
               <el-divider />
             </div>
             <div class="tipItem">
-              <div class="position"><b>项目总监</b></div>
-              <div class="process">
-                <el-breadcrumb separator-class="el-icon-arrow-right">
-                  <el-breadcrumb-item>创建项目</el-breadcrumb-item>
-                  <el-breadcrumb-item>设置项目经理</el-breadcrumb-item>
-                  <el-breadcrumb-item>添加项目成员</el-breadcrumb-item>
-                  <el-breadcrumb-item>查看工时统计</el-breadcrumb-item>
-                  <el-breadcrumb-item>项目归档</el-breadcrumb-item>
-                </el-breadcrumb>
+              <p class="tag-group__title">管理/人事</p>
+              <div class="tag-group">
+                <el-tag effect="plain" class="tagafer">添加人员 </el-tag>
+                <p class="tipsLine"></p>
+                <el-tag effect="plain" class="tagafer">设置岗位角色 </el-tag>
+                <p class="tipsLine"></p>
+                <el-tag effect="plain" class="tagafer">设置人员成本 </el-tag>
+                <p class="tipsLine"></p>
+                <el-tag effect="plain" class="tagafer">完成 </el-tag>
               </div>
             </div>
             <div class="tipItem">
-              <div class="position"><b>项目经理</b></div>
-              <div class="process">
-                <el-breadcrumb separator-class="el-icon-arrow-right">
-                  <el-breadcrumb-item>维护团队</el-breadcrumb-item>
-                  <el-breadcrumb-item>核查工时</el-breadcrumb-item>
-                  <el-breadcrumb-item>完成项目</el-breadcrumb-item>
-                  <el-breadcrumb-item>项目归档</el-breadcrumb-item>
-                </el-breadcrumb>
+              <p class="tag-group__title">项目总监</p>
+              <div class="tag-group">
+                <el-tag effect="plain" class="tagafer">创建项目 </el-tag>
+                <p class="tipsLine"></p>
+                <el-tag effect="plain" class="tagafer">设置项目经理 </el-tag>
+                <p class="tipsLine"></p>
+                <el-tag effect="plain" class="tagafer">添加项目成员 </el-tag>
+                <p class="tipsLine"></p>
+                <el-tag effect="plain" class="tagafer">查看工时统计 </el-tag>
+                <p class="tipsLine"></p>
+                <el-tag effect="plain" class="tagafer">查看成本投入 </el-tag>
               </div>
             </div>
             <div class="tipItem">
-              <div class="position"><b>开发人员</b></div>
-              <div class="process">
-                <el-breadcrumb separator-class="el-icon-arrow-right">
-                  <el-breadcrumb-item>填报日志</el-breadcrumb-item>
-                  <el-breadcrumb-item>更新工时</el-breadcrumb-item>
-                  <el-breadcrumb-item>更新工时</el-breadcrumb-item>
-                </el-breadcrumb>
+              <p class="tag-group__title">项目经理</p>
+              <div class="tag-group">
+                <el-tag effect="plain" class="tagafer">维护团队 </el-tag>
+                <p class="tipsLine"></p>
+                <el-tag effect="plain" class="tagafer">核查工时 </el-tag>
+                <p class="tipsLine"></p>
+                <el-tag effect="plain" class="tagafer">完成项目 </el-tag>
+                <p class="tipsLine"></p>
+                <el-tag effect="plain" class="tagafer">项目归档 </el-tag>
+              </div>
+            </div>
+            <div class="tipItem">
+              <p class="tag-group__title">开发人员</p>
+              <div class="tag-group">
+                <el-tag effect="plain" class="tagafer">填报 </el-tag>
+                <p class="tipsLine"></p>
+                <el-tag effect="plain" class="tagafer">更新工时 </el-tag>
+                <p class="tipsLine"></p>
+                <el-tag effect="plain" class="tagafer">完成 </el-tag>
               </div>
             </div>
           </div>
         </div></el-col
       >
-      <el-col :span="6"
+      <el-col :span="8"
         ><div class="grid-content bg-purple-light">
           <!-- <el-descriptions title="今日工时提交情况"> -->
           <!-- <el-descriptions-item label="今日提交">10人</el-descriptions-item>
@@ -169,16 +173,20 @@
                 size="mini"
                 style="height:35px;float: right;font-size:14px"
                 type="primary"
-                :disabled="IndexFillInfo.dayFill != 1"
+                :disabled="IndexFillInfo.fillStatus != 2"
                 >提交</el-button
               >
             </div>
             <div class="text item mycardbox">
-              <p>
-                本月：已提交{{ IndexFillInfo.monthFill }}次，缺报{{
-                  IndexFillInfo.monthMissFill
-                }}次
-              </p>
+              <div>
+                <span>本月：</span
+                ><span>
+                  <p>已提交{{ IndexFillInfo.monthFill }}次</p>
+                  <p>缺勤{{ IndexFillInfo.monthMissFill }}次</p>
+                  <p>请假{{ IndexFillInfo.leaveNum }}次</p>
+                  <p>倒休{{ IndexFillInfo.offDutyNum }}次</p>
+                </span>
+              </div>
               <!-- <p>
                 本月：<el-tag
                   >已提交{{ IndexFillInfo.monthFill }}次，缺报{{
@@ -203,12 +211,16 @@
                 <span style="font-weight:600">最新动态</span>
               </div>
               <div class="text item">
-                <el-table :data="IndexLoginUserInfo" style="width: 100%;font-size:12px">
+                <el-table
+                  :data="IndexLoginUserInfo"
+                  style="width: 100%;font-size:12px"
+                >
                   <el-table-column prop="loginDate" label="日期" align="center">
                   </el-table-column>
-                  <el-table-column prop="nickName" label="姓名" align="center">
+                  <el-table-column prop="nickName" label="动态" align="center">
                     <template slot-scope="scope">
-                      <p>{{ scope.row.nickName }}——登录系统</p>
+                      <p>{{ scope.row.nickName }}</p>
+                      <p>登录系统</p>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -250,11 +262,13 @@ export default {
       postGroup: {},
       peojectcardInfo: [],
       IndexFillInfo: {},
-      IndexLoginUserInfo: []
+      IndexLoginUserInfo: [],
+      workTime: null
     };
   },
   created() {
-    console.log("creatd");
+    // console.clear();
+    this.workTime = this.$store.state.user.appconfig.workTime;
     this.getUser();
     this.init();
   },
@@ -289,24 +303,33 @@ export default {
               el.cardStatus = true;
             }
           });
-          console.log("peojectcardInfo", this.peojectcardInfo);
+          // console.log("peojectcardInfo", this.peojectcardInfo);
         }
       });
       getIndexFillInfo().then(res => {
-        console.log("getIndexFillInfo", res);
+        // console.log("getIndexFillInfo", res);
         if (res.code == 200) {
           this.IndexFillInfo = res.data;
-          if (this.IndexFillInfo.dayFill == 1) {
+          if (this.IndexFillInfo.fillStatus == 1) {
             this.IndexFillInfo.subtype = "danger";
-            this.IndexFillInfo.tagName = "未上报";
-          } else if (this.IndexFillInfo.dayFill == 2) {
             this.IndexFillInfo.tagName = "已上报";
+          } else if (this.IndexFillInfo.fillStatus == 2) {
+            this.IndexFillInfo.tagName = "未上报";
             this.IndexFillInfo.subtype = "success";
-          } else if (this.IndexFillInfo.dayFill == 3) {
+          } else if (this.IndexFillInfo.fillStatus == 3) {
+            this.IndexFillInfo.tagName = "无需上报";
+            this.IndexFillInfo.subtype = "";
+          }else if (this.IndexFillInfo.fillStatus == 4) {
+            this.IndexFillInfo.tagName = "节假日";
+            this.IndexFillInfo.subtype = "";
+          }else if (this.IndexFillInfo.fillStatus == 5) {
+            this.IndexFillInfo.tagName = "请假";
+            this.IndexFillInfo.subtype = "";
+          }else if (this.IndexFillInfo.fillStatus == 6) {
             this.IndexFillInfo.tagName = "无需上报";
             this.IndexFillInfo.subtype = "";
           } else {
-            this.IndexFillInfo.tagName = "未知状态";
+            this.IndexFillInfo.tagName = "未知状态，联系管理员";
             this.IndexFillInfo.subtype = "warning";
           }
         }
@@ -315,7 +338,7 @@ export default {
         // console.log("getIndexLoginUser", res);
         if (res.code == 200) {
           this.IndexLoginUserInfo = res.rows;
-          console.log(" this.IndexLoginUserInfo", this.IndexLoginUserInfo);
+          // console.log(" this.IndexLoginUserInfo", this.IndexLoginUserInfo);
         }
       });
     },
@@ -325,7 +348,8 @@ export default {
     },
     checkWorkingHours() {
       // console.log("查看工时");
-      this.$router.push({ path: "/workingHours/myStatistics" });
+      // this.$router.push({ path: "/workingHours/myStatistics" });
+      this.$router.push({ path: "/workingHours/fillInWorkingHours" });
     },
     goTarget(href) {
       window.open(href, "_blank");
@@ -410,6 +434,9 @@ export default {
   display: flex;
   justify-content: space-between;
   align-content: center;
+  p {
+    width: auto;
+  }
 }
 
 // .clearfix:before,
@@ -436,6 +463,9 @@ export default {
     flex-wrap: nowrap;
     .left {
       width: 55%;
+      .top {
+        font-size: 14px;
+      }
     }
     .header-left {
       font-size: 16px;
@@ -445,6 +475,7 @@ export default {
       width: 45%;
       .top {
         text-align: center;
+        font-size: 14px;
       }
       .bottom {
         display: flex;
@@ -478,9 +509,6 @@ export default {
 }
 .bg-purple-dark {
   background: #99a9bf;
-}
-.bg-purple {
-  // background: #d3dce6;
 }
 .bg-purple-light {
   // background: #e5e9f2;
@@ -529,5 +557,17 @@ h6 {
   // justify-content: space-between !important;
   align-items: center;
   flex-wrap: wrap;
+}
+.tag-group {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.tipsLine {
+  display: inline-block;
+  width: 50px;
+  height: 2px;
+  background-color: #009ccd;
+  margin: auto 0 !important;
 }
 </style>

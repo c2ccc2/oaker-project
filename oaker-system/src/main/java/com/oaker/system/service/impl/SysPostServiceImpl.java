@@ -19,6 +19,7 @@ import java.util.List;
  */
 @Service
 public class SysPostServiceImpl implements ISysPostService {
+
     @Autowired
     private SysPostMapper postMapper;
 
@@ -166,5 +167,10 @@ public class SysPostServiceImpl implements ISysPostService {
     public SysPost getByUserId(Long userId) {
         long postId = this.selectPostListByUserId(userId);
         return this.selectPostById(postId);
+    }
+
+    @Override
+    public int countPost(String postName) {
+        return postMapper.countPost(postName);
     }
 }

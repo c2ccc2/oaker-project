@@ -49,6 +49,8 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, MhProject> im
         mhProject.setProjectName(projectSaveDTO.getProjectName())
                 .setProjectCode(projectSaveDTO.getProjectCode())
                 .setProjectManager(projectSaveDTO.getProjectManager())
+                .setStartDate(projectSaveDTO.getStartDate())
+                .setEndDate(projectSaveDTO.getEndDate())
                 .setRemark(projectSaveDTO.getRemark())
                 .setCreateBy(username)
                 .setCreateTime(date);
@@ -99,6 +101,8 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, MhProject> im
         mhProject.setProjectId(projectUpdateDTO.getProjectId())
                 .setProjectName(projectUpdateDTO.getProjectName())
                 .setProjectManager(projectUpdateDTO.getProjectManager())
+                .setStartDate(projectUpdateDTO.getStartDate())
+                .setEndDate(projectUpdateDTO.getEndDate())
                 .setRemark(projectUpdateDTO.getRemark());
         return baseMapper.updateById(mhProject) > 0;
     }
@@ -111,5 +115,12 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, MhProject> im
         return baseMapper.updateById(mhProject) > 0;
     }
 
-
+    @Override
+    public boolean enable(Long projectId, Boolean enable) {
+        EntityWrapper<MhProject> wrapper = new EntityWrapper<>();
+        wrapper.eq(Columns.Project.projectId, projectId);
+        MhProject mhProject = new MhProject();
+        mhProject.setEnable(enable);
+        return baseMapper.update(mhProject, wrapper) > 0;
+    }
 }

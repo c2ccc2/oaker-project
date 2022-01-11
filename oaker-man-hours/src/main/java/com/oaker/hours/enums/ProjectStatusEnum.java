@@ -19,7 +19,7 @@ public enum ProjectStatusEnum {
     /** 项目状态 运维*/
     MAINTAIN("b", "运维"),
     /** 项目状态 归档*/
-    COMPLETE("c", "归档");
+    COMPLETE("c", "结束");
 
     private final String code;
     private final String desc;
@@ -33,6 +33,15 @@ public enum ProjectStatusEnum {
         for (ProjectStatusEnum value : ProjectStatusEnum.values()) {
             if (Objects.equals(projectStatus, value.getCode())) {
                 return value.getDesc();
+            }
+        }
+        return null;
+    }
+
+    public static String getCodeByDesc(String desc) {
+        for (ProjectStatusEnum value : ProjectStatusEnum.values()) {
+            if (Objects.equals(desc, value.getDesc())) {
+                return value.getCode();
             }
         }
         return null;

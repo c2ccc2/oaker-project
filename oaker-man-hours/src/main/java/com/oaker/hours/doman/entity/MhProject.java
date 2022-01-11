@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -47,7 +48,13 @@ public class MhProject {
     private Long projectManager;
 
     /**
-     * 项目状态：a 进行中，b运维，c 归档
+     * 项目状态 1 启用   0暂停
+     */
+    @TableField(value = "enable")
+    private Boolean enable;
+
+    /**
+     * 项目状态：a 进行中，b运维，c 结束
      */
     @TableField(value = "project_status")
     private String projectStatus;
@@ -63,6 +70,18 @@ public class MhProject {
      */
     @TableField(value = "deleted")
     private Boolean deleted;
+
+    /**
+     * 开始日期
+     */
+    @TableField(value = "start_date")
+    private LocalDate startDate;
+
+    /**
+     * 结束日期
+     */
+    @TableField(value = "end_date")
+    private LocalDate endDate;
 
     /**
      * 创建者

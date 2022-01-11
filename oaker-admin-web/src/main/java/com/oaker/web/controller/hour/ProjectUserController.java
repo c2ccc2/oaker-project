@@ -23,6 +23,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @Description : 项目成员
@@ -91,6 +92,9 @@ public class ProjectUserController extends BaseController {
     // @PreAuthorize("@ss.hasPermi('mh:project:hour')")
     public AjaxResult queryMyProject(Date date) {
         Long userId = SecurityUtils.getUserId();
+        if (Objects.isNull(date)) {
+            date = new Date();
+        }
         return AjaxResult.success(projectUserService.queryMyProject(userId, date));
     }
 
@@ -102,8 +106,22 @@ public class ProjectUserController extends BaseController {
     @PreAuthorize("@ss.hasPermi('mh:project:user:all')")
     public AjaxResult userProjects(String projectStatus) {
         Long userId = SecurityUtils.getUserId();
-        List<UserProjectShortVO> vos = projectUserService.userProjects(userId, projectStatus);
+        List<UserProjectShortVO> vos = projectUserService.userProjects(userId, projectStatus, null);
         return AjaxResult.success(vos);
+    }
+
+    /**
+     * 更改项目成员每日上报分组
+     * @param id
+     * @param everyday
+     * @return
+     */
+    @PutMapping("/everyday")
+    @PreAuthorize("@ss.hasPermi('mh:project:user:add')")
+    @Log(title = "项目人员管理-每日上报分组", businessType = BusinessType.UPDATE)
+    public AjaxResult updateEveryDay(@NotNull(message = "id不能为空") Long id
+            , @NotNull(message = "上报分组不能为空") Boolean everyday) {
+        return toAjax(projectUserService.updateEveryDay(id, everyday));
     }
 
 }

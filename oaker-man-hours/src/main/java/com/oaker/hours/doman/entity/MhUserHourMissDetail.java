@@ -31,6 +31,10 @@ public class MhUserHourMissDetail {
     @TableField(value = "project_id")
     private Long projectId;
 
+    /** 项目状态：a 进行中，b运维，c 结束 */
+    @TableField("project_status")
+    private String projectStatus;
+
     /** 人员id */
     @TableField(value = "user_id")
     private Long userId;

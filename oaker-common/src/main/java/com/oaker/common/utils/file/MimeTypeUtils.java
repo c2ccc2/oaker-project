@@ -18,6 +18,8 @@ public class MimeTypeUtils {
 
     public static final String[] IMAGE_EXTENSION = {"bmp", "gif", "jpg", "jpeg", "png"};
 
+    public static final String[] IMG_EXTENSION = {"jpg", "jpeg", "png"};
+
     public static final String[] FLASH_EXTENSION = {"swf", "flv"};
 
     public static final String[] MEDIA_EXTENSION = {"swf", "flv", "mp3", "wav", "wma", "wmv", "mid", "avi", "mpg",

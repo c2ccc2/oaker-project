@@ -6,7 +6,8 @@
       :rules="loginRules"
       class="login-form"
     >
-      <h3 class="title">OAK后台管理系统</h3>
+      <!-- <h3 class="title">OAK后台管理系统</h3> -->
+      <h3 class="title">{{ systemName }}</h3>
       <el-form-item prop="username">
         <el-input
           v-model="loginForm.username"
@@ -79,12 +80,13 @@
       </el-form-item>
     </el-form>
     <!--  底部  -->
-    <div class="el-login-version">
-      <p>系统名称: "{{ loginVersion.系统名称 }}"</p>
-      <p>version: "{{loginVersion.version}}"</p>
-    </div>
+
     <div class="el-login-footer">
       <span>Copyright © 2021 九橡出品 </span>
+    </div>
+    <div class="el-login-version">
+      <!-- <p>系统名称: "{{ loginVersion.系统名称 }}"</p> -->
+      <p>version: {{ loginVersion.version }}</p>
     </div>
   </div>
 </template>
@@ -93,11 +95,13 @@
 import { getCodeImg, loginversion } from "@/api/login";
 import Cookies from "js-cookie";
 import { encrypt, decrypt } from "@/utils/jsencrypt";
+import { getConfig } from "@/api/manage/setEditor";
 
 export default {
   name: "Login",
   data() {
     return {
+      systemName: "",
       codeUrl: "",
       cookiePassword: "",
       loginForm: {
@@ -136,8 +140,13 @@ export default {
   created() {
     this.getCode();
     this.getCookie();
+    this.setloginName();
   },
   methods: {
+    setloginName() {
+      // console.log(process.env.VUE_APP_TITLE)
+      this.systemName = process.env.VUE_APP_TITLE;
+    },
     getCode() {
       getCodeImg().then(res => {
         this.captchaOnOff =
@@ -149,11 +158,12 @@ export default {
         }
       });
       loginversion().then(res => {
-        console.log(res);
+        // console.log(res);
 
         this.loginVersion = res;
-        console.log(this.loginVersion);
-        console.log(this.loginVersion.date);
+        this.systemName = res.loginName;
+        // console.log(this.loginVersion);
+        // console.log(this.loginVersion.date);
       });
     },
     getCookie() {
@@ -209,17 +219,22 @@ export default {
   align-items: center;
   height: 100%;
   background-image: url("../assets/images/login-background.jpg");
+  // background-image: url("../assets/images/login-background3.png");
   background-size: cover;
+  // background-size: 100% 100%;
 }
 .title {
   margin: 0px auto 30px auto;
   text-align: center;
   color: #707070;
+  // font-size: 20px;
+  font-size: 1.5rem ;
 }
 
 .login-form {
   border-radius: 6px;
   background: #ffffff;
+  // background-color: rgba(255, 255, 255, 0.041);
   width: 400px;
   padding: 25px 25px 5px 25px;
   .el-input {
@@ -252,7 +267,7 @@ export default {
   // height: 100%;
   // line-height: 40px;
   position: fixed;
-  bottom: 40px;
+  bottom: 0;
   width: 90%;
   text-align: center;
   color: #fff;
@@ -264,7 +279,7 @@ export default {
   height: 40px;
   line-height: 40px;
   position: fixed;
-  bottom: 0;
+  bottom: 40px;
   width: 100%;
   text-align: center;
   color: #fff;

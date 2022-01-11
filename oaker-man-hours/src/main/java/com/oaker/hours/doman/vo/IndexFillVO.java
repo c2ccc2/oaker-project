@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.math.BigDecimal;
+
 /**
  * @Description : 首页上报信息
  * <功能详细描述>
@@ -16,14 +18,23 @@ import lombok.experimental.Accessors;
 @ApiModel(value = "IndexFillVO", description = "首页上报信息")
 public class IndexFillVO {
 
-    @ApiModelProperty("今日是否上报(1 未上报  2 已上报 3 无需上报)")
-    private int dayFill;
+    @ApiModelProperty("填报状态：1 已填报， 2 未填报， 3不需填报, 4 节假日, 5 请假， 6 调休")
+    private Integer fillStatus;
+
+    @ApiModelProperty("今日上报工时")
+    private BigDecimal dayHour = BigDecimal.ZERO;
 
     @ApiModelProperty("本月上报次数")
     private int monthFill;
 
     @ApiModelProperty("本月缺报次数")
     private int monthMissFill;
+
+    @ApiModelProperty("本月请假天数")
+    private int leaveNum;
+
+    @ApiModelProperty("本月倒休天数")
+    private int offDutyNum;
 
 
 }

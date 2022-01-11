@@ -9,6 +9,7 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -22,7 +23,9 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -225,7 +228,8 @@ public class FileUtils {
     }
 
     @SuppressWarnings("rawtypes")
-    public static List upzipFile(File zipFile, String descDir) {
+    public static List upzipFile(String filePath, String fileName, String descDir) {
+        File zipFile = new File(filePath + fileName);
         List list = new ArrayList<>();
         // 防止文件名中有中文时出错
         System.setProperty("sun.zip.encoding", System.getProperty("sun.jnu.encoding"));
@@ -260,8 +264,79 @@ public class FileUtils {
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException(e.getMessage());
+        } finally {
+            if (zipFile.exists()) {
+                zipFile.delete();
+            }
         }
         return list;
+    }
+
+    /**
+     * 解压zip文件并返回所有文件名称与存储路径map
+     * @param filePath
+     * @param fileName
+     * @param targetPath
+     * @return
+     * @throws IOException
+     */
+    public static Map<String, String> unzip(String filePath, String fileName, String targetPath) throws IOException {
+        String zipFilePath = filePath + fileName;
+        // 定义返回值
+        Map<String, String> imgFileMap = new HashMap<>();
+        OutputStream os = null;
+        InputStream is = null;
+        ZipFile zipFile = null;
+        try {
+            zipFile = new ZipFile(zipFilePath, Charset.forName("GBK"));
+            String directoryPath = "";
+            if (null == targetPath || "".equals(targetPath)) {
+                directoryPath = zipFilePath.substring(0, zipFilePath.lastIndexOf("."));
+            } else {
+                directoryPath = targetPath;
+            }
+            Enumeration<?> entryEnum = zipFile.entries();
+            if (null != entryEnum) {
+                ZipEntry zipEntry;
+                while (entryEnum.hasMoreElements()) {
+                    zipEntry = (ZipEntry) entryEnum.nextElement();
+                    if (zipEntry.getSize() > 0) {
+                        // 文件
+                        File targetFile = new File(directoryPath + File.separator + zipEntry.getName());
+                        os = new BufferedOutputStream(new FileOutputStream(targetFile));
+                        is = zipFile.getInputStream(zipEntry);
+                        byte[] buffer = new byte[4096];
+                        int readLen;
+                        while ((readLen = is.read(buffer, 0, 4096)) >= 0) {
+                            os.write(buffer, 0, readLen);
+                            os.flush();
+                        }
+                        is.close();
+                        os.close();
+                        imgFileMap.put(zipEntry.getName(), targetFile.getPath());
+                    }
+                    if (zipEntry.isDirectory()) {
+                        String pathTemp =  directoryPath + File.separator + zipEntry.getName();
+                        File file = new File(pathTemp);
+                        file.mkdirs();
+                    }
+                }
+            }
+        } catch (IOException ex) {
+            throw ex;
+        } finally {
+            if(null != zipFile){
+                zipFile.close();
+            }
+            if (null != is) {
+                is.close();
+            }
+            if (null != os) {
+                os.close();
+            }
+            org.apache.commons.io.FileUtils.deleteDirectory(new File(filePath));
+        }
+        return imgFileMap;
     }
 
 }

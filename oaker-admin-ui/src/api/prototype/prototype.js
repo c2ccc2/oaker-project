@@ -1,5 +1,13 @@
 import request from '@/utils/request'
 
+// 用户查询自己参与的项目
+export function getUserProjectAll(param) {
+  return request({
+    url: '/system/project/user/my/project/all',
+    method: 'get',
+    param
+  })
+}
 
 // 项目原型列表查询
 export function listProto(query) {
@@ -65,8 +73,30 @@ export function listProtoRecord(id) {
 export function updateProto(data) {
   return request({
     type: 'form',
-    url:'/pr/proto/update',
-    method:'put',
-    data:data
+    url: '/pr/proto/update',
+    method: 'put',
+    data: data
+  })
+}
+// 项目原型-效果图记录
+export function listProtoSketch(id) {
+  return request({
+    url: '/pr/sketch/list?prototypeId=' + id,
+    method: 'get'
+  })
+}
+// 项目原型-查询效果图
+export function listProtoSketchFiles(id) {
+  return request({
+    url: '/pr/sketch/files?sketchId=' + id,
+    method: 'get'
+  })
+}
+
+//删除效果图
+export function listSketchdelete(id) {
+  return request({
+    url: '/pr/sketch/delete?id=' + id,
+    method: 'delete'
   })
 }

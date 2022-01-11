@@ -2,6 +2,7 @@ package com.oaker.hours.service;
 
 import com.oaker.hours.doman.entity.MhUserHourMiss;
 import com.oaker.hours.doman.entity.MhUserHourMissDetail;
+import com.oaker.hours.doman.vo.UserProjectShortVO;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -48,8 +49,8 @@ public interface MhUserHourMissService {
      * @param projectId
      * @param date
      * @return
-     */
-    int countProjectMiss(Long projectId, LocalDate date);
+
+    int countProjectMiss(Long projectId, LocalDate date);*/
 
     /**
      * 获取项目得缺报记录
@@ -59,4 +60,24 @@ public interface MhUserHourMissService {
      */
     List<MhUserHourMissDetail> queryProjectMiss(Long projectId, LocalDate date);
 
+    /**
+     * 删除用户缺报记录
+     * @param leaveDate
+     * @return
+     */
+    boolean deleteMiss(LocalDate leaveDate);
+
+    /**
+     * 根据用户缺报记录id查询用户参与项目
+     * @param missId
+     * @return
+     */
+    List<UserProjectShortVO> queryMyMissProject(Long missId);
+
+    /**
+     * 由请假记录id生成缺报记录
+     * @param id
+     * @return
+     */
+    boolean createMissByLeaveId(Long id);
 }

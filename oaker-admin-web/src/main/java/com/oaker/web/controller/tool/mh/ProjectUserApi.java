@@ -100,5 +100,14 @@ public class ProjectUserApi {
         return Collections.singletonList(new UserProjectShortVO());
     }
 
+    @PutMapping("/everyday")
+    @ApiOperation("更改项目成员每日上报分组接口")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "记录id", dataType = "Long", required = true),
+            @ApiImplicitParam(name = "everyday", value = "是否每日上报", dataType = "Boolean", required = true)
+    })
+    public AjaxResult updateEveryDay(Long id, Boolean everyday) {
+        return AjaxResult.success();
+    }
 
 }

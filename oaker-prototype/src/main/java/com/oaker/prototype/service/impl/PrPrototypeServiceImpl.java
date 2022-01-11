@@ -48,13 +48,16 @@ import java.util.stream.Collectors;
 @Service
 public class PrPrototypeServiceImpl extends ServiceImpl<PrPrototypeMapper, PrPrototype> implements PrPrototypeService {
 
-    private static final String[] PROTO_ALLOWED_EXTENSION = { "rar", "zip"};
+    private static final String[] PROTO_ALLOWED_EXTENSION = {"zip"};
 
     @Resource
     private UserServiceImpl userService;
 
     @Resource
     private PrDocServiceImpl prDocService;
+
+    @Resource
+    private PrSketchServiceImpl sketchService;
 
     @Resource
     private ProjectUserService projectUserService;
@@ -110,7 +113,7 @@ public class PrPrototypeServiceImpl extends ServiceImpl<PrPrototypeMapper, PrPro
                     + uuid;
             // 如果已经上传过的情况
             if (!Objects.isNull(prPrototype.getRecordId())) {
-                FileUtils.upzipFile(new File(tmpPath + fileName), filePath);
+                FileUtils.upzipFile(tmpPath, fileName, filePath);
                 String url = FileUploadUtils.getPathFileName(filePath, fileNameNoEx) + "/" + "start.html";
                 Long recordId = prProtoRecordService.create(fileNameNoEx, filePath, prototypeId, url);
                 prPrototype.setRecordId(recordId);
@@ -118,8 +121,7 @@ public class PrPrototypeServiceImpl extends ServiceImpl<PrPrototypeMapper, PrPro
                 prProtoRecordService.deleteRecordLimit(prototypeId);
                 return recordId;
             }
-            File zipFile = new File(tmpPath + fileName);
-            FileUtils.upzipFile(zipFile, filePath);
+            FileUtils.upzipFile(tmpPath, fileName, filePath);
             String url = FileUploadUtils.getPathFileName(filePath, FileUploadUtils.getFileNameNoEx(fileName)) + "/" + "start.html";
             Long recordId = prProtoRecordService.create(fileNameNoEx, filePath, prototypeId, url);
             prPrototype.setRecordId(recordId);
@@ -183,7 +185,8 @@ public class PrPrototypeServiceImpl extends ServiceImpl<PrPrototypeMapper, PrPro
                     .setCreateUser(userId)
                     .setCreateUserName(sysUserEntity.getNickName())
                     .setPrototypeUrl(prototypeUrl)
-                    .setDocList(docList);
+                    .setDocList(docList)
+                    .setSketchId(prPrototype.getSketchId());
             list.add(vo);
         }
         tableDataInfo.setTotal(count);
@@ -199,7 +202,7 @@ public class PrPrototypeServiceImpl extends ServiceImpl<PrPrototypeMapper, PrPro
             return false;
         }
         Long userId = SecurityUtils.getUserId();
-        List<UserProjectShortVO> vos = projectUserService.queryMyProject(userId, null);
+        List<UserProjectShortVO> vos = projectUserService.queryMyProject(userId, new Date());
         Set<Long> collect = vos.stream().map(UserProjectShortVO::getProjectId).collect(Collectors.toSet());
         if (!collect.contains(prPrototype.getProjectId())) {
             throw new ServiceException("当前用户未参与此项目，不能删除原型信息");
@@ -220,5 +223,18 @@ public class PrPrototypeServiceImpl extends ServiceImpl<PrPrototypeMapper, PrPro
         PrPrototype prototype = new PrPrototype();
         prototype.setPubId(pubId);
         return baseMapper.selectOne(prototype);
+    }
+
+    @Override
+    public boolean setSketchId(Long prototypeId, Long sketchId) {
+        PrPrototype prPrototype = new PrPrototype();
+        prPrototype.setId(prototypeId)
+                .setSketchId(sketchId);
+        return baseMapper.updateById(prPrototype) > 0;
+    }
+
+    @Override
+    public boolean deleteSketch(Long id, Long sketchId) {
+        return baseMapper.deleteSketch(id, sketchId) > 0;
     }
 }

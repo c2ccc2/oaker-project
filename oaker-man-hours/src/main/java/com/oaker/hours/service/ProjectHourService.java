@@ -1,8 +1,13 @@
 package com.oaker.hours.service;
 
 import com.oaker.common.core.page.TableDataInfo;
+import com.oaker.hours.doman.dto.ProjectHourStatMonthDetailDTO;
+import com.oaker.hours.doman.vo.OverallHourDetailVO;
+import com.oaker.hours.doman.vo.OverallHourListVO;
+import com.oaker.hours.doman.vo.ProjectFillCalendar;
+import com.oaker.hours.doman.vo.ProjectFillCalendarDetail;
+import com.oaker.hours.doman.vo.ProjectHourFillStatListVO;
 import com.oaker.hours.doman.vo.ProjectHourStatMonth;
-import com.oaker.hours.doman.vo.ProjectHourStatMonthDetail;
 import com.oaker.hours.doman.vo.ProjectHourStatUser;
 import com.oaker.hours.doman.vo.ProjectUserFillVO;
 
@@ -36,6 +41,15 @@ public interface ProjectHourService {
     TableDataInfo queryProjectHourStat(String projectStatus, int pageNum, int pageSize);
 
     /**
+     * 项目统计列表上报记录
+     * @param projectId
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    List<ProjectHourFillStatListVO> queryProjectHourFillStat(Long projectId, LocalDate startDate, LocalDate endDate);
+
+    /**
      * 获取项目填报详情
      * @param projectId
      * @param date
@@ -60,11 +74,70 @@ public interface ProjectHourService {
 
     /**
      * 项目工时按月统计详情
-     * @param projectId
-     * @param yearMonth
+     * @param monthDetailDTO
+     * @param pageStart
+     * @param pageSize
      * @return
      */
-    List<ProjectHourStatMonthDetail> queryProjectMonthUserDetail(Long projectId, String yearMonth);
+    TableDataInfo queryProjectMonthUserDetail(ProjectHourStatMonthDetailDTO monthDetailDTO, int pageStart, int pageSize);
+
+    /**
+     * 总体统计列表查询
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    List<OverallHourListVO> queryOverallList(LocalDate startDate, LocalDate endDate);
+
+    /**
+     * 查询总体统计详情-已上报
+     * @param localDate
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    TableDataInfo queryOverallDetail(LocalDate localDate, int pageNum, int pageSize);
+
+    /**
+     * 总体统计指定日期统计
+     * @param localDate
+     * @return
+     */
+    OverallHourDetailVO.OverallHourStat queryOverallDetailStat(LocalDate localDate);
+
+    /**
+     * 总体统计指定日期请假人员
+     * @param localDate
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    TableDataInfo overallLeaveDetail(LocalDate localDate, int pageNum, int pageSize);
+
+    /**
+     * 总体统计指定日期缺报人员查询
+     * @param localDate
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    TableDataInfo overallMissDetail(LocalDate localDate, int pageNum, int pageSize);
+
+    /**
+     * 查询项目上报日历
+     * @param localDate
+     * @param projectId
+     * @return
+     */
+    List<ProjectFillCalendar> queryProjectFillCalendar(LocalDate localDate, Long projectId);
+
+    /**
+     * 查询查询项目上报日历详情
+     * @param localDate
+     * @param projectId
+     * @return
+     */
+    ProjectFillCalendarDetail getProjectFillCalendarDetail(LocalDate localDate, Long projectId);
 
 
 }

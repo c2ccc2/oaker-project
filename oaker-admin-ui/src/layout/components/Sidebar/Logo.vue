@@ -1,24 +1,58 @@
 <template>
-  <div class="sidebar-logo-container" :class="{'collapse':collapse}" :style="{ backgroundColor: sideTheme === 'theme-dark' ? variables.menuBg : variables.menuLightBg }">
+  <div
+    class="sidebar-logo-container"
+    :class="{ collapse: collapse }"
+    :style="{
+      backgroundColor:
+        sideTheme === 'theme-dark' ? variables.menuBg : variables.menuLightBg
+    }"
+  >
     <transition name="sidebarLogoFade">
-      <router-link v-if="collapse" key="collapse" class="sidebar-logo-link" to="/">
+      <router-link
+        v-if="collapse"
+        key="collapse"
+        class="sidebar-logo-link"
+        to="/"
+      >
         <img v-if="logo" :src="logo" class="sidebar-logo" />
-        <h1 v-else class="sidebar-title" :style="{ color: sideTheme === 'theme-dark' ? variables.sidebarTitle : variables.sidebarLightTitle }">{{ title }} </h1>
+        <h1
+          v-else
+          class="sidebar-title"
+          :style="{
+            color:
+              sideTheme === 'theme-dark'
+                ? variables.sidebarTitle
+                : variables.sidebarLightTitle
+          }"
+        >
+          {{ title }}
+        </h1>
       </router-link>
       <router-link v-else key="expand" class="sidebar-logo-link" to="/">
         <img v-if="logo" :src="logo" class="sidebar-logo" />
-        <h1 class="sidebar-title" :style="{ color: sideTheme === 'theme-dark' ? variables.sidebarTitle : variables.sidebarLightTitle }">{{ title }} </h1>
+        <h1
+          class="sidebar-title"
+          :style="{
+            color:
+              sideTheme === 'theme-dark'
+                ? variables.sidebarTitle
+                : variables.sidebarLightTitle
+          }"
+        >
+          {{ title }}
+        </h1>
       </router-link>
     </transition>
   </div>
 </template>
 
 <script>
-import logoImg from '@/assets/logo/logo.png'
-import variables from '@/assets/styles/variables.scss'
+import logoImg from "@/assets/logo/logo.png";
+import variables from "@/assets/styles/variables.scss";
+import { getConfig } from "@/api/manage/setEditor";
 
 export default {
-  name: 'SidebarLogo',
+  name: "SidebarLogo",
   props: {
     collapse: {
       type: Boolean,
@@ -29,17 +63,30 @@ export default {
     variables() {
       return variables;
     },
-	sideTheme() {
-      return this.$store.state.settings.sideTheme
+    sideTheme() {
+      return this.$store.state.settings.sideTheme;
     }
   },
   data() {
     return {
-      title: 'OAK管理系统',
+      title: process.env.VUE_APP_TITLE,
       logo: logoImg
+    };
+  },
+  created() {
+    this.getInfo()
+  },
+  methods:{
+    getInfo(){
+      getConfig().then(res=>{
+        if(res.code==200){
+          this.title=res.data.appName
+          this.logo=process.env.VUE_APP_BASE_API+ res.data.logoImg
+        }
+      })
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oaker.hours.mapper.MhPostCostMapper">
+
+    <select id="queryPostCost" resultType="com.oaker.hours.doman.vo.MhPostCostVO">
+        SELECT
+        sp.post_id AS postId
+        , sp.post_name AS postName
+        , ifnull(pc.cost, 0.00) AS cost
+        , pc.create_user AS createUser
+        , pc.create_time AS createTime
+        , pc.update_user AS updateUser
+        , pc.update_time AS updateTime
+        FROM sys_post AS sp LEFT JOIN mh_post_cost pc ON sp.post_id = pc.post_id
+        <where>
+            AND sp.status = 0
+            <if test="postName != null and postName != ''">
+                AND sp.post_name LIKE concat('%', #{postName}, '%')
+            </if>
+        </where>
+        LIMIT #{pageStart},#{pageSize}
+    </select>
+</mapper>

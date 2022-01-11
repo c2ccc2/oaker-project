@@ -42,11 +42,25 @@ import ImageUpload from "@/components/ImageUpload"
 import DictTag from '@/components/DictTag'
 // 头部标签组件
 import VueMeta from 'vue-meta'
-
+// 自定义日历
+import Datepicker from '@/components/date-picker'
 // dmk
 import 'vue-event-calendar/dist/style.css' //1.1.10之后的版本，css被放在了单独的文件中，方便替换
 import vueEventCalendar from 'vue-event-calendar'
-Vue.use(vueEventCalendar, {locale: 'zh',color:'#1890ff'}) //可以设置语言，支持中文和英文
+
+// 导出插件
+import JsonExcel from 'vue-json-excel'
+
+import './quasar'
+// 表格插件
+import 'xe-utils'
+import VXETable from 'vxe-table'
+import 'vxe-table/lib/style.css'
+Vue.use(vueEventCalendar, {
+  locale: 'zh',
+  color: '#1890ff'
+}) //可以设置语言，支持中文和英文
+Vue.use(VXETable)//全局引入表格插件
 
 // 全局方法挂载
 Vue.prototype.getDicts = getDicts
@@ -86,6 +100,8 @@ Vue.component('RightToolbar', RightToolbar)
 Vue.component('Editor', Editor)
 Vue.component('FileUpload', FileUpload)
 Vue.component('ImageUpload', ImageUpload)
+Vue.component('Datepicker', Datepicker)
+Vue.component('downloadExcel', JsonExcel)
 
 Vue.use(directive)
 Vue.use(VueMeta)

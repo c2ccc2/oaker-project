@@ -42,6 +42,9 @@ public class UserHourDetailVO {
     @ApiModelProperty("填报日期")
     private LocalDate fillDate;
 
+    @ApiModelProperty("日报内容")
+    private String daily;
+
     @ApiModelProperty("更新时间")
     private Date updateTime;
 

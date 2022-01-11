@@ -37,8 +37,30 @@
         <!-- <el-form-item label="预计投入工时" prop="manHour">
           <el-input v-model="ruleForm.manHour"></el-input>
         </el-form-item> -->
+        <el-form-item label="开始时间" prop="startDate">
+          <div class="block">
+            <el-date-picker
+              v-model="ruleForm.startDate"
+              type="date"
+              value-format="yyyy-MM-dd"
+              placeholder="开始日期"
+            >
+            </el-date-picker>
+          </div>
+        </el-form-item>
+        <el-form-item label="结束时间">
+          <div class="block">
+            <el-date-picker
+              v-model="ruleForm.endDate"
+              type="date"
+              value-format="yyyy-MM-dd"
+              placeholder="结束日期"
+            >
+            </el-date-picker>
+          </div>
+        </el-form-item>
 
-        <el-form-item label="项目形式">
+        <el-form-item label="项目描述">
           <el-input type="textarea" v-model="ruleForm.remark"></el-input>
         </el-form-item>
         <!-- <el-form-item>
@@ -72,9 +94,13 @@ export default {
         projectName: "",
         projectManager: "",
         projectCode: "",
+        startDate: "",
+        endDate: "",
         // manHour: "",
         remark: ""
       },
+      startDate: "",
+      endDate: "",
       rules: {
         projectName: [
           { required: true, message: "请输入项目名称", trigger: "blur" },
@@ -86,19 +112,36 @@ export default {
         projectCode: [
           { required: true, message: "请选择项目编码", trigger: "change" }
         ],
+        startDate: [
+          {
+            type: "string",
+            required: true,
+            message: "请选择日期",
+            trigger: "change"
+          }
+        ]
         // manHour: [{ required: true, message: "请输入工时", trigger: "change" }]
       },
       projectManagerArr: []
     };
   },
   methods: {
+    showdates() {
+      // console.log();
+    },
     open() {
-      console.log(this.formdata);
+      // console.log("111", this.formdata);
       this.getprojectManager();
       this.ruleForm.projectId = this.formdata.projectId;
       this.ruleForm.projectName = this.formdata.projectName;
       this.ruleForm.projectManager = this.formdata.projectManager;
       this.ruleForm.projectCode = this.formdata.projectCode;
+      // this.ruleForm.startDate = [];
+      // this.ruleForm.startDate.push(this.formdata.startDate);
+      this.ruleForm.startDate = this.formdata.startDate;
+      // this.ruleForm.endDate = []
+      // this.ruleForm.endDate.push(this.formdata.endDate);
+      this.ruleForm.endDate = this.formdata.endDate;
       // this.ruleForm.manHour = this.formdata.manHour;
       this.ruleForm.remark = this.formdata.remark;
       this.dialogFormVisible = true;
@@ -110,14 +153,14 @@ export default {
 
           let data = this.ruleForm;
           updateModify(data).then(res => {
-            console.log(res);
+            // console.log(res);
             if (res.code == 200) {
               this.dialogFormVisible = false;
               this.$parent.init();
             }
           });
         } else {
-          console.log("error submit!!");
+          // console.log("error submit!!");
           return false;
         }
       });
@@ -127,7 +170,7 @@ export default {
     },
     getprojectManager() {
       getBox().then(res => {
-        console.log(res);
+        // console.log("11121", res);
         if (res.code == 200) {
           this.projectManagerArr = res.data;
         }

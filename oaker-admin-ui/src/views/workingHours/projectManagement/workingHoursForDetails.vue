@@ -35,12 +35,6 @@
           <el-descriptions-item label="工时"
             >{{ headerInfo.totalHours }} 工时</el-descriptions-item
           >
-          <el-descriptions-item label="累计投入"
-            >{{ (totalHour/8).toFixed(2) }} 人天 ({{
-              totalHour
-            }}
-            工时）</el-descriptions-item
-          >
         </el-descriptions>
       </div>
       <div class="">
@@ -97,7 +91,7 @@ export default {
   data() {
     return {
       date: "今日",
-      yesterdayStep:1,
+      yesterdayStep: 1,
       tableDatafills: [],
       tableDataunFills: [],
       headerInfo: {},
@@ -140,20 +134,20 @@ export default {
   created() {
     this.projectId = this.$route.query.projectId;
     this.totalHour = this.$route.query.totalHour;
-    console.log(this.projectId);
+   // console.log(this.projectId);
     this.getdatetaday();
     this.init();
   },
   methods: {
     init() {
-      console.log(this.taday);
+     // console.log(this.taday);
       let params = {
         date: this.taday,
         projectId: this.projectId
       };
-      console.log(params);
+     // console.log(params);
       projectHourStatFillDetail(params).then(res => {
-        console.log(res);
+       // console.log(res);
         if (res.code == 200) {
           this.headerInfo = res.data;
           this.tableDatafills = res.data.fills;
@@ -172,16 +166,15 @@ export default {
             } else {
               this.tableDataunFills = [];
             }
-          }else{
-              this.tableDatafills = [];
-
+          } else {
+            this.tableDatafills = [];
           }
           this.setheaderInfo();
         }
       });
     },
     getdatetaday() {
-      this.yesterdayStep=1;
+      this.yesterdayStep = 1;
       let date = new Date();
       let year = date.getFullYear();
       let month = date.getMonth() + 1;
@@ -195,12 +188,12 @@ export default {
       let newdate = year + "-" + month + "-" + day;
       this.taday = newdate;
       this.init();
-      console.log(newdate);
+     // console.log(newdate);
     },
     getyesterday() {
       let day = new Date();
-      console.log(this.yesterdayStep,'step')
-      day.setTime(day.getTime() - 24 * 60 * 60 * 1000*this.yesterdayStep);
+     // console.log(this.yesterdayStep, "step");
+      day.setTime(day.getTime() - 24 * 60 * 60 * 1000 * this.yesterdayStep);
       let year = day.getFullYear();
       let month = day.getMonth() + 1;
       let days = day.getDate();
@@ -216,7 +209,7 @@ export default {
       this.init();
     },
     setheaderInfo() {
-      console.log(this.headerInfo);
+     // console.log(this.headerInfo);
       if (this.headerInfo.unFills != null) {
       } else {
         this.headerInfo.unFills = [];

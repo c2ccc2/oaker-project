@@ -194,4 +194,15 @@ public class ProjectController extends BaseController {
         return toAjax(result);
     }
 
+    /**
+     * 设置项目 暂停/启用 状态
+     */
+    @PutMapping("/enable")
+    @PreAuthorize("@ss.hasPermi('system:project:status:edit')")
+    @Log(title = "设置项目 暂停/启用 状态", businessType = BusinessType.UPDATE)
+    public AjaxResult enable(@NotNull(message = "项目id不能为空") Long projectId
+            ,@NotNull(message = "状态不能为空不能为空") Boolean enable) {
+        return toAjax(projectService.enable(projectId, enable));
+    }
+
 }

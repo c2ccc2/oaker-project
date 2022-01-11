@@ -1,13 +1,19 @@
 package com.oaker.hours.service;
 
+import com.oaker.common.core.page.TableDataInfo;
+import com.oaker.hours.doman.dto.ProjectHourStatMonthDetailDTO;
 import com.oaker.hours.doman.dto.UserHourSaveDTO;
 import com.oaker.hours.doman.dto.UserHourUpdateDTO;
 import com.oaker.hours.doman.entity.MhHourDetail;
 import com.oaker.hours.doman.entity.MhUserHour;
+import com.oaker.hours.doman.vo.ProjectHourStatMonthDetail;
+import com.oaker.hours.doman.vo.UserHourCalendarVO;
 import com.oaker.hours.doman.vo.UserHourDetailVO;
+import com.oaker.hours.doman.vo.UserHourExportVO;
 import com.oaker.hours.doman.vo.UserHourListVO;
-import com.oaker.hours.doman.vo.UserHourStatDestailVO;
+import com.oaker.hours.doman.vo.UserHourProjectStat;
 import com.oaker.hours.doman.vo.UserHourStatVO;
+import com.oaker.hours.doman.vo.UserProjectShortVO;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -36,6 +42,13 @@ public interface MhUserHourService {
     List<UserHourListVO> queryList(LocalDate startDate, LocalDate endDate);
 
     /**
+     * 用户查询缺报记录
+     * @return
+     */
+    TableDataInfo missList(int pageNum, int pageSize);
+
+
+    /**
      * 查看工时填报详情
      * @param hourId
      * @return
@@ -50,18 +63,43 @@ public interface MhUserHourService {
     boolean updateUserHour(UserHourUpdateDTO userHourUpdateDTO);
 
     /**
-     * 用户我的工时统计
+     * 填报记录-列表
      * @param localDate
      * @return
      */
-    UserHourStatVO getMyHourStat(LocalDate localDate);
+    List<UserHourStatVO> getMyHourStat(LocalDate localDate);
+
+    /**
+     * 用户工时-按项目统计
+     * @param localDate
+     * @return
+     */
+    List<UserHourProjectStat> queryUserHourProjectStat(LocalDate localDate);
+
+    /**
+     * 用户填报记录导出
+     * @param localDate
+     * @param projectId
+     * @return
+     */
+    UserHourExportVO userHourExport(LocalDate localDate, Long projectId);
+
+
+    /**
+     * 查询用户填报记录-日历
+     * @param localDate
+     * @return
+     */
+    List<UserHourCalendarVO> queryUserHourCalendar(LocalDate localDate);
 
     /**
      * 查询用户工时统计详细模式
      * @param localDate
+     * @param pageNum
+     * @param pageSize
      * @return
      */
-    List<UserHourStatDestailVO> queryMyHourStatDetail(LocalDate localDate);
+    TableDataInfo queryMyHourStatDetail(LocalDate localDate, int pageNum, int pageSize);
 
     /**
      * 统计项目填报总数
@@ -69,7 +107,7 @@ public interface MhUserHourService {
      * @param date
      * @return
      */
-    int countFillByProject(Long projectId, LocalDate date);
+    List<MhHourDetail> queryFillByProject(Long projectId, LocalDate date);
 
     /**
      * 获取项目工时填报记录
@@ -86,6 +124,20 @@ public interface MhUserHourService {
      * @return
      */
     List<MhHourDetail> queryProjectUserHourMonth(Long projectId, String yearMonth);
+
+    /**
+     * 获取项目工时填报记录-月份查询详情
+     * @param monthDetailDTO
+     * @return
+     */
+    int countProjectMonthUserDetail(ProjectHourStatMonthDetailDTO monthDetailDTO);
+
+    /**
+     * 获取项目工时填报记录-月份查询详情
+     * @param monthDetailDTO
+     * @return
+     */
+    List<ProjectHourStatMonthDetail> queryProjectMonthUserDetail(ProjectHourStatMonthDetailDTO monthDetailDTO, int pageStart, int pageSize);
 
     /**
      * 查询用户指定日期填报信息
@@ -113,4 +165,32 @@ public interface MhUserHourService {
     int getMonthMissFill(Long userId, LocalDate localDate);
 
 
+    /**
+     * 用户请假
+     * @param leaveDate
+     * @param leaveType {@link com.oaker.hours.enums.LeaveTypeEnum}
+     * @return
+     */
+    boolean userLeave(LocalDate leaveDate, int leaveType);
+
+    /**
+     * 取消请假/调休
+     * @param id
+     * @return
+     */
+    boolean unLeave(Long id);
+
+    /**
+     * 获取项目指定日工时填报详情
+     * @param projectId
+     * @param localDate
+     */
+    List<MhHourDetail> queryProjectFillDetail(Long projectId, LocalDate localDate);
+
+    /**
+     * 用户查询缺报项目
+     * @param missId
+     * @return
+     */
+    List<UserProjectShortVO> queryMyMissProject(Long missId);
 }

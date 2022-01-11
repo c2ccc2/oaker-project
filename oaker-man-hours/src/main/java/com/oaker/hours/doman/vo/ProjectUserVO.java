@@ -45,5 +45,8 @@ public class ProjectUserVO {
     @ApiModelProperty("岗位名称")
     private String postName;
 
+    @ApiModelProperty("是否需要每日上报工时 0 不需要  1 需要")
+    private Boolean everyday;
+
 
 }

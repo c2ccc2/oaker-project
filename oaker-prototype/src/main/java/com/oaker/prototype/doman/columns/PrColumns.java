@@ -46,10 +46,24 @@ public interface PrColumns {
         String path = "path";
     }
 
+    interface PrSketch {
+        String fileName = "file_name";
+        String prototypeId = "prototype_id";
+        String path = "path";
+    }
+
+    interface PrSketchFile {
+        String sketchId = "sketch_id";
+        String fileName = "file_name";
+        String prototypeId = "prototype_id";
+        String fileUrl = "file_url";
+        String path = "path";
+    }
+
 
 
     public static void main(String[] args) {
-        Field[] fields = PrDoc.class.getDeclaredFields();
+        Field[] fields = PrSketchFile.class.getDeclaredFields();
         for (Field field : fields) {
             String column = null;
             TableId tableId = field.getAnnotation(TableId.class);

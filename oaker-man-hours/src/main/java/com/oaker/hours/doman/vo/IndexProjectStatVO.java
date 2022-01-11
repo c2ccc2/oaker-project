@@ -42,11 +42,11 @@ public class IndexProjectStatVO {
     @ApiModelProperty("已投入工时")
     private BigDecimal useHour;
 
-    @ApiModelProperty("今日上报工时（-1 为未上报）")
-    private BigDecimal dayHour = new BigDecimal(-1);
+    @ApiModelProperty("填报状态：1 已填报， 2 未填报， 3不需填报, 4 节假日, 5 请假， 6 调休")
+    private Integer fillStatus;
 
-    @ApiModelProperty("昨日上报工时（-1 为未上报）")
-    private BigDecimal yesHour = new BigDecimal(-1);
+    @ApiModelProperty("今日上报工时")
+    private BigDecimal dayHour = BigDecimal.ZERO;
 
 
 }

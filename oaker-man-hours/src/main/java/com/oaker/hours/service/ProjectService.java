@@ -50,4 +50,12 @@ public interface ProjectService {
      */
     boolean delete(Long projectId);
 
+    /**
+     * 设置项目 暂停/启用 状态
+     * @param projectId
+     * @param enable
+     * @return
+     */
+    boolean enable(Long projectId, Boolean enable);
+
 }

@@ -2,6 +2,7 @@ package com.oaker.hours.service.impl;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.oaker.common.core.domain.IdName;
 import com.oaker.common.core.domain.entity.SysUser;
 import com.oaker.common.enums.UserStatus;
 import com.oaker.common.enums.UserTypeEnum;
@@ -25,13 +26,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toCollection;
 
 /**
  * @Description :
@@ -80,7 +87,7 @@ public class ProjectUserServiceImpl extends ServiceImpl<ProjectUserMapper, Proje
 
     @Override
     public List<ProjectUserVO> queryList(Long projectId) {
-        List<ProjectUser> projectUsers = this.queryUserByProjectId(projectId);
+        List<ProjectUser> projectUsers = this.queryUserByProjectId(projectId, null);
         if (CollectionUtils.isEmpty(projectUsers)) {
             return Collections.emptyList();
         }
@@ -106,15 +113,19 @@ public class ProjectUserServiceImpl extends ServiceImpl<ProjectUserMapper, Proje
                 .setEmail(sysUser.getEmail())
                 .setNickName(sysUser.getNickName())
                 .setPostId(sysPost.getPostId())
+                .setEveryday(projectUser.getEveryday())
                 .setPostName(sysPost.getPostName());
         return projectUserVo;
     }
 
     @Override
-    public List<ProjectUser> queryUserByProjectId(Long projectId) {
+    public List<ProjectUser> queryUserByProjectId(Long projectId, Boolean everyday) {
         EntityWrapper<ProjectUser> wrapper = new EntityWrapper<>();
         wrapper.eq(Columns.ProjectUser.projectId, projectId);
         wrapper.eq(Columns.ProjectUser.status, Boolean.TRUE);
+        if (!Objects.isNull(everyday)) {
+            wrapper.eq(Columns.ProjectUser.everyday, everyday);
+        }
         return baseMapper.selectList(wrapper);
     }
 
@@ -132,7 +143,7 @@ public class ProjectUserServiceImpl extends ServiceImpl<ProjectUserMapper, Proje
 
     @Override
     public List<ProjectUserVO> selectList(Long projectId, String nickName) {
-        List<ProjectUser> projectUsers = this.queryUserByProjectId(projectId);
+        List<ProjectUser> projectUsers = this.queryUserByProjectId(projectId, null);
         List<Long> userIds = projectUsers.stream()
                 .map(ProjectUser::getUserId)
                 .collect(Collectors.toList());
@@ -190,13 +201,16 @@ public class ProjectUserServiceImpl extends ServiceImpl<ProjectUserMapper, Proje
     }
 
     @Override
-    public Set<Long> queryJoinUserIds() {
-        return baseMapper.queryJoinUserIds();
+    public Set<Long> queryJoinUserIds(LocalDate localDate) {
+        if (Objects.isNull(localDate)) {
+            localDate = LocalDate.now();
+        }
+        return baseMapper.queryJoinUserIds(localDate);
     }
 
     @Override
-    public List<UserProjectShortVO> userProjects(Long userId, String projectStatus) {
-        List<UserProjectShortVO> vos = baseMapper.queryProjectByUserId(userId, projectStatus);
+    public List<UserProjectShortVO> userProjects(Long userId, String projectStatus, Boolean everyday) {
+        List<UserProjectShortVO> vos = baseMapper.queryProjectByUserId(userId, projectStatus, everyday);
         if (CollectionUtils.isEmpty(vos)) {
             return vos;
         }
@@ -205,5 +219,30 @@ public class ProjectUserServiceImpl extends ServiceImpl<ProjectUserMapper, Proje
             vo.setProjectStatus(desc);
         }
         return vos;
+    }
+
+    @Override
+    public List<IdName> queryUserAll(Long projectId) {
+        return baseMapper.queryUserAll(projectId);
+    }
+
+    @Override
+    public List<IdName> queryPostAll(Long projectId) {
+        List<IdName> idNames = baseMapper.queryPostAll(projectId);
+        if (CollectionUtils.isEmpty(idNames)) {
+            return Collections.emptyList();
+        }
+        return idNames.stream().collect(collectingAndThen(
+                toCollection(() -> new TreeSet<>(Comparator.comparing(IdName::getId))), ArrayList::new));
+    }
+
+    @Override
+    public boolean updateEveryDay(Long id, Boolean everyday) {
+        ProjectUser projectUser = new ProjectUser();
+        projectUser.setId(id)
+                .setEveryday(everyday)
+                .setUpdateUser(SecurityUtils.getUserId())
+                .setUpdateTime(new Date());
+        return baseMapper.updateById(projectUser) > 0;
     }
 }

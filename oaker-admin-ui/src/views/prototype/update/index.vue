@@ -141,13 +141,13 @@ export default {
       this.$refs.upload.submit();
     },
     handleRemove(file, fileList) {
-      console.log(file, fileList);
+     // console.log(file, fileList);
     },
     handlePreview(file) {
-      console.log(file);
+     // console.log(file);
     },
     onSubmit() {
-      console.log("submit!");
+     // console.log("submit!");
     }
   }
 };

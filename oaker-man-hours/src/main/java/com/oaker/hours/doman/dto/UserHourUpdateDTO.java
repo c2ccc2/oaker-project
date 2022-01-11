@@ -47,6 +47,9 @@ public class UserHourUpdateDTO {
         @ApiModelProperty(name = "hour", value = "填报工时", required = true)
         private BigDecimal hour;
 
+        @ApiModelProperty(value = "日报内容")
+        private String daily;
+
     }
 
 

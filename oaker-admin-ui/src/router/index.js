@@ -55,21 +55,21 @@ export const constantRoutes = [{
     component: (resolve) => require(['@/views/error/401'], resolve),
     hidden: true
   },
-  // {
-  //   path: '/',
-  //   component: Layout,
-  //   redirect: 'index',
-  //   children: [{
-  //     path: 'index',
-  //     component: (resolve) => require(['@/views/index'], resolve),
-  //     // name: 'Index',
-  //     meta: {
-  //       title: '首页',
-  //       icon: 'dashboard',
-  //       affix: true
-  //     }
-  //   }]
-  // },
+  {
+    path: '/',
+    component: Layout,
+    redirect: 'index',
+    children: [{
+      path: 'index',
+      component: (resolve) => require(['@/views/index'], resolve),
+      // name: 'Index',
+      meta: {
+        title: '首页',
+        icon: 'dashboard',
+        affix: true
+      }
+    }]
+  },
   {
     path: '',
     component: Layout,
@@ -101,6 +101,36 @@ export const constantRoutes = [{
     }]
   },
   {
+    path: '/system',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [{
+      path: 'about',
+      component: (resolve) => require(['@/views/system/about/index'], resolve),
+      name: 'About',
+      meta: {
+        title: '系统关于',
+        icon: 'peoples'
+      }
+    }]
+  },
+  {
+    path: '/prototype',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [{
+      path: 'showImg',
+      component: (resolve) => require(['@/views/prototype/showImg/index'], resolve),
+      name: 'ShowImg',
+      meta: {
+        title: '效果图',
+        icon: 'peoples'
+      }
+    }]
+  },
+  {
     path: '/workingHours',
     component: Layout,
     hidden: true,
@@ -111,8 +141,43 @@ export const constantRoutes = [{
       name: 'WorkingInfo',
       meta: {
         title: '查看工时详情',
-        icon: ''
+        icon: '',
+        activeMenu: '/workingHours/myWorkingHours'
       }
+    }, {
+      path: 'dailyReportToRecord',
+      component: (resolve) => require(['@/views/workingHours/projectDai/dailyReportToRecord'], resolve),
+      name: 'DailyReportToRecord',
+      meta: {
+        title: '每日上报记录',
+        icon: '',
+        activeMenu: '/workingHours/projectDai'
+      }
+    }, {
+      path: 'fillInWorkingHours',
+      component: (resolve) => require(['@/views/workingHours/myWorkingHours/fillInWorkingHours'], resolve),
+      name: 'FillInWorkingHours',
+      meta: {
+        title: '填报记录',
+        icon: '',
+        activeMenu: '/workingHours/myWorkingHours'
+      }
+    }]
+  },
+  {
+    path: '/overallStatistics',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [{
+      path: "workingHoursForDetails",
+      component: (resolve) => require(['@/views/workingHours/overallStatistics/workingHoursForDetails'], resolve),
+      name: 'WorkingHoursForDetails',
+      meta: {
+        title: '上报记录',
+        activeMenu: '/workingHours/overallStatistics'
+
+      },
     }]
   },
   {
@@ -121,12 +186,23 @@ export const constantRoutes = [{
     hidden: true,
     redirect: 'noredirect',
     children: [{
-        path: "workingHoursForDetails",
-        component: (resolve) => require(['@/views/workingHours/projectManagement/workingHoursForDetails'], resolve),
-        name: 'WorkingHoursForDetails',
+        path: "newWorkingHouring",
+        component: (resolve) => require(['@/views/workingHours/projectManagement/newWorkingHouring/index'], resolve),
+        name: 'NewWorkingHouring',
         meta: {
-          title: '上报记录',
-          icon: ''
+          title: '工时上报记录',
+          activeMenu: '/workingHours/projectManagement'
+
+        }
+      },
+      {
+        path: "tadayForHour",
+        component: (resolve) => require(['@/views/workingHours/projectManagement/tadayForHour/index'], resolve),
+        name: 'TadayForHour',
+        meta: {
+          title: '每日上报记录',
+          activeMenu: '/workingHours/projectManagement'
+
         }
       },
       {
@@ -135,22 +211,32 @@ export const constantRoutes = [{
         name: 'HourSubsidiary',
         meta: {
           title: '工时明细',
-          icon: ''
+          activeMenu: '/workingHours/projectManagement'
+
+        }
+      },
+      {
+        path: "costStatistics",
+        component: (resolve) => require(['@/views/workingHours/projectManagement/costStatistics/index'], resolve),
+        name: 'CostStatistics',
+        meta: {
+          title: '项目成本统计',
+          activeMenu: '/workingHours/projectManagement'
+
         }
       },
       {
         path: "projectSettingsHour",
         component: (resolve) => require(['@/views/workingHours/projectSettingsHour/index'], resolve),
-        // name: 'WorkingHours',
+        name: 'ProjectSettingsHour',
         meta: {
           title: '项目详情',
-          icon: ''
+          activeMenu: '/workingHours/projectManagement'
         }
       }
     ]
-  },
-  {
-    path: '/system/project-Set',
+  }, {
+    path: '/mange/project-set',
     component: Layout,
     hidden: true,
     children: [{
@@ -159,11 +245,10 @@ export const constantRoutes = [{
       name: 'ProjectSettings',
       meta: {
         title: '项目设置',
-        activeMenu: 'system/project'
+        activeMenu: '/manage/project'
       }
     }]
-  },
-  {
+  }, {
     path: '/system/user-auth',
     component: Layout,
     hidden: true,
@@ -176,8 +261,7 @@ export const constantRoutes = [{
         activeMenu: '/system/user'
       }
     }]
-  },
-  {
+  }, {
     path: '/system/role-auth',
     component: Layout,
     hidden: true,
@@ -190,8 +274,7 @@ export const constantRoutes = [{
         activeMenu: '/system/role'
       }
     }]
-  },
-  {
+  }, {
     path: '/system/dict-data',
     component: Layout,
     hidden: true,
@@ -204,8 +287,7 @@ export const constantRoutes = [{
         activeMenu: '/system/dict'
       }
     }]
-  },
-  {
+  }, {
     path: '/monitor/job-log',
     component: Layout,
     hidden: true,
@@ -218,8 +300,7 @@ export const constantRoutes = [{
         activeMenu: '/monitor/job'
       }
     }]
-  },
-  {
+  }, {
     path: '/tool/gen-edit',
     component: Layout,
     hidden: true,

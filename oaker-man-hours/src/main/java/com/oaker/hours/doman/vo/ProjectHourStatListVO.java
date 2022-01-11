@@ -39,17 +39,17 @@ public class ProjectHourStatListVO {
     @ApiModelProperty("预估工时")
     private BigDecimal totalHour;
 
-    @ApiModelProperty("昨天应报数量")
-    private int yesMustFill;
-
-    @ApiModelProperty("昨天上报数量")
-    private int yesFill;
-
-    @ApiModelProperty("今天应报数量")
+    @ApiModelProperty("今天应报数量(每日)")
     private int todayMustFill;
 
-    @ApiModelProperty("今天上报数量")
-    private int todayFill;
+    @ApiModelProperty("今天上报数量(每日)")
+    private int todayMustFillNum;
+
+    @ApiModelProperty("今天上报数量(总计)")
+    private int totalFill;
+
+    @ApiModelProperty("今天应报数量(总计)")
+    private int totalFillNum;
 
 
 }

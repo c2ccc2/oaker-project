@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oaker.hours.mapper.MhUserHourMapper">
+
+    <select id="countProjectMonthUserDetail" resultType="java.lang.Integer">
+        SELECT
+        COUNT(mhd.id)
+        FROM mh_hour_detail AS mhd LEFT JOIN sys_user_post sup ON mhd.user_id = sup.user_id
+        <where>
+            mhd.project_id = #{dto.projectId}
+            <if test="dto.month != null and dto.month != ''">
+                AND mhd.fill_date LIKE concat(#{dto.month}, '%')
+            </if>
+            <if test="dto.date != null">
+                AND mhd.fill_date = #{dto.date}
+            </if>
+            <if test="dto.projectStatus != null and dto.projectStatus != ''">
+                AND mhd.project_status = #{dto.projectStatus}
+            </if>
+            <if test="dto.userId != null">
+                AND mhd.user_id = #{dto.userId}
+            </if>
+            <if test="dto.postId != null">
+                AND sup.post_id = #{dto.postId}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryProjectMonthUserDetail" resultType="com.oaker.hours.doman.vo.ProjectHourStatMonthDetail">
+        SELECT
+        mhd.id AS id
+        , mhd.user_id AS userId
+        , mhd.use_hour AS useHour
+        , mhd.fill_date AS fillDate
+        , mhd.project_status AS projectStatus
+        , mhd.create_time AS createTime
+        , mhd.everyday AS everyday
+        , sup.post_id AS postId
+        FROM mh_hour_detail AS mhd LEFT JOIN sys_user_post sup ON mhd.user_id = sup.user_id
+        <where>
+            mhd.project_id = #{dto.projectId}
+            <if test="dto.month != null">
+                AND mhd.fill_date LIKE concat(#{dto.month}, '%')
+            </if>
+            <if test="dto.date != null">
+                AND mhd.fill_date = #{dto.date}
+            </if>
+            <if test="dto.projectStatus != null and dto.projectStatus != ''">
+                AND mhd.project_status = #{dto.projectStatus}
+            </if>
+            <if test="dto.userId != null">
+                AND mhd.user_id = #{dto.userId}
+            </if>
+            <if test="dto.postId != null">
+                AND sup.post_id = #{dto.postId}
+            </if>
+        </where>
+        LIMIT #{pageStart},#{pageSize}
+    </select>
+</mapper>

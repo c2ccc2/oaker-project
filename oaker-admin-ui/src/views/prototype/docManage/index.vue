@@ -2,9 +2,9 @@
   <div class="main">
     <!-- <h1>docManage</h1> -->
     <el-dialog title="文档" :visible.sync="dialogFormVisible">
-      <el-form ref="form" label-width="120px" class="cusForm">
-        <el-form-item label="文档管理："  v-hasPermi="['pr:proto:upload']">
-          <el-upload
+      <el-form ref="form" class="cusForm">
+        <el-form-item label="文档管理：" v-hasPermi="['pr:proto:upload']">
+          <br /><el-upload
             class="upload-demo"
             ref="uploadDoc"
             :limit="10"
@@ -30,7 +30,7 @@
               style="margin-left: 10px;height:26px"
             ></el-button>
             <div slot="tip" class="el-upload__tip">
-              文件格式仅限doc,docx,xls,xlsx,ppt,pptx,,txt,rar,zip,gz,bz2,pdf等格式。
+              文件格式仅限doc,docx,xls,xlsx,ppt,pptx,txt,rar,zip,gz,bz2,pdf等格式。
             </div>
           </el-upload>
         </el-form-item>
@@ -48,13 +48,12 @@
         <el-form-item label="上传记录：">
           <template>
             <el-table :data="tableData" style="width: 100%">
-              <el-table-column prop="docName" label="文档" width="250">
+              <el-table-column prop="docName" label="文档"> </el-table-column>
+              <el-table-column prop="createTime" label="更新时间" width="150">
               </el-table-column>
-              <el-table-column prop="createTime" label="更新时间" width="180">
+              <el-table-column prop="createUserName" label="操作" width="100">
               </el-table-column>
-              <el-table-column prop="createUserName" label="操作">
-              </el-table-column>
-              <el-table-column label="管理" width="160" fixed="right">
+              <el-table-column label="管理" width="160">
                 <template slot-scope="scope">
                   <el-button
                     size="mini"
@@ -65,7 +64,7 @@
                     size="mini"
                     type="danger"
                     @click="handleDelete(scope.$index, scope.row)"
-                  v-hasPermi="['pr:doc:delete']"
+                    v-hasPermi="['pr:doc:delete']"
                     >删除</el-button
                   >
                 </template>
@@ -91,7 +90,7 @@ export default {
   data() {
     return {
       dialogFormVisible: false,
-      tempselectid:null,
+      tempselectid: null,
       id: null,
       arrIndex: null,
       protoId: null,
@@ -113,28 +112,28 @@ export default {
     // this.arrIndex = this.$route.query.arrIndex;
     // this.protoId = this.$route.query.protoId;
     this.params.projectId = this.id;
-    
+
     // this.init();
   },
   methods: {
     open() {
       // this.dataDoc.prototypeId = this.protoId;
-      this.dialogFormVisible=true
+      this.dialogFormVisible = true;
       // this.protoId=this.dataDoc.projectId
       queryDoc(this.protoId).then(res => {
-        console.log("queryDoc", res);
+        // console.log("queryDoc", res);
         if (res.code == 200) {
           this.tableData = res.data;
-          console.log("this.tableData", this.tableData);
+          // console.log("this.tableData", this.tableData);
         }
       });
     },
-    close(){
-      this.dialogFormVisible=false
-      this.fileListDOC=[]
+    close() {
+      this.dialogFormVisible = false;
+      this.fileListDOC = [];
     },
     onSubmit() {
-      console.log("submit!");
+      // console.log("submit!");
       this.$refs.uploadDoc.submit();
     },
     handleBeforeDoc(file) {
@@ -159,38 +158,36 @@ export default {
         this.$message({
           type: "warning",
           message:
-            "需求文档请上传后缀名为[doc,docx,xls,xlsx,ppt,pptx,,txt,rar,zip,gz,bz2,pdf]的文件！"
+            "需求文档请上传后缀名为[doc,docx,xls,xlsx,ppt,pptx,txt,rar,zip,gz,bz2,pdf]的文件！"
         });
         return false;
       }
     },
     handleSuccess(res, file, fileList) {
-      console.log("handleSuccess", res, file, fileList);
+      // console.log("handleSuccess", res, file, fileList);
       if (res.code == 200) {
         this.$message.success("上传成功");
-        this.close()
+        this.close();
         // this.init();
         // this.$parent.init();
-        this.$parent.value4=parseInt(this.tempselectid);
+        this.$parent.value4 = parseInt(this.tempselectid);
         this.$parent.getList(this.tempselectid);
-
-        
       } else {
         this.$message.error("上传失败！");
       }
     },
     handleRemove(file, fileList) {
-      console.log("handleRemove", file, fileList);
+      // console.log("handleRemove", file, fileList);
     },
     handlePreview(file) {
-      console.log("file", file);
+      // console.log("file", file);
     },
     download(index, row) {
-      console.log(index, row);
+      // console.log(index, row);
       window.open(process.env.VUE_APP_BASE_API + row.docUrl);
     },
     handleDelete(index, row) {
-      console.log(index, row);
+      // console.log(index, row);
       this.$confirm("确定要删除该条内容？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -232,7 +229,7 @@ export default {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-::v-deep .el-upload__tip{
+::v-deep .el-upload__tip {
   height: 36px;
 }
 </style>

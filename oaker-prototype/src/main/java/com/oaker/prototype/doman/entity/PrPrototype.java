@@ -36,6 +36,10 @@ public class PrPrototype {
     @TableField(value = "record_id")
     private Long recordId;
 
+    /** 效果图id */
+    @TableField(value = "sketch_id")
+    private Long sketchId;
+
     /** 原型公开id */
     @TableField(value = "pub_id")
     private String pubId;
